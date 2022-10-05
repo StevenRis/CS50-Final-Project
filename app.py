@@ -12,7 +12,14 @@ def home():
 
 @app.route("/cars")
 def cars():
-    return render_template("cars.html")
+    """Show cars"""
+
+    connection = sql.connect("test.db")
+    connection.row_factory = sql.Row
+
+    db = connection.cursor()
+    cars = db.execute("SELECT * FROM cars")
+    return render_template("cars.html", cars=cars)
 
 
 @app.route("/locations")
@@ -25,7 +32,6 @@ def locations():
     db = connection.cursor()
     locations = db.execute("SELECT * FROM locations")
 
-    # rows = db.fetchall()
     return render_template("locations.html", locations=locations)
 
 
