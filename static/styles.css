@@ -1,0 +1,9 @@
+footer, div#content {
+    display: none;
+    }
+
+div#loading {
+    position: absolute;
+    z-index: 1000;
+    cursor: wait;
+    }

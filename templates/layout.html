@@ -36,7 +36,12 @@
     </nav>
 
     <main class="container-fluid py-3 text-center">
-        {% block main %}{% endblock %}
+        <div id="loading" class="container-fluid">
+            <div class="spinner-border"></div>
+        </div>
+        <div id="content">
+            {% block main %}{% endblock %}
+        </div>
     </main>
 
     <footer class="mb-5 small text-center text-muted">
