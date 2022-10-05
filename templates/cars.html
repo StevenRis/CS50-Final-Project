@@ -14,11 +14,11 @@
                 <img class="card-img-top" src="/static/images/cars/2000cc/{{ car['image'] }}" alt="Car image" style="width:100%">
                 <div class="card-body">
                     <h4 class="card-title mb-3">{{ car['brand'] }} {{ car['model'] }}</h4>
-                    <a href="/" class="btn btn-secondary">Setups</a>
+                    <a href="/{{ car['image'] }}" class="btn btn-secondary car-setup">Setups</a>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
-    
+
 {% endblock %}

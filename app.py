@@ -5,6 +5,7 @@ import sqlite3 as sql
 
 app = Flask(__name__)
 
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -13,8 +14,7 @@ def home():
 @app.route("/cars")
 def cars():
     """Show cars"""
-
-    connection = sql.connect("test.db")
+    connection = sql.connect("database.db")
     connection.row_factory = sql.Row
 
     db = connection.cursor()
@@ -25,14 +25,21 @@ def cars():
 @app.route("/locations")
 def locations():
     """Show locations"""
-
-    connection = sql.connect("test.db")
+    connection = sql.connect("database.db")
     connection.row_factory = sql.Row
 
     db = connection.cursor()
     locations = db.execute("SELECT * FROM locations")
 
     return render_template("locations.html", locations=locations)
+
+
+@app.route("/focus-rs-01", methods=["GET", "POST"])
+def show_setup():
+
+    if request.method == "GET":
+
+        return render_template ("focus-rs-01.html")
 
 
 # enable debug mode - no need to restart the server to refresh the page
