@@ -1,10 +1,10 @@
-from flask import Flask
+from flask import Flask, render_template, redirect
 
 app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return "Hello"
+    return render_template("index.html")
 
 
 # enable debug mode - no need to restart the server to refresh the page
