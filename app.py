@@ -36,25 +36,22 @@ def locations():
 
 @app.route("/focus-rs-01", methods=["GET", "POST"])
 def show_setup():
+    """Show setup"""
+    if request.method == "POST":
+        location_name = request.form.get("location_name")
 
-    connection = sql.connect("database.db")
-    connection.row_factory = sql.Row
+        if location_name == 'Catamarca Province, Argentina':
+            return render_template('locations.html')
 
-    db = connection.cursor()
-    brand = 'Ford'
-    # car_brand = db.execute("SELECT id FROM cars WHERE brand=?", [brand])
-    setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE brand=?)", [brand])
-    # setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN car_brand=?", [car_brand])
+    else:
+        connection = sql.connect("database.db")
+        connection.row_factory = sql.Row
 
-    return render_template ("focus-rs-01.html", setups=setups)
+        db = connection.cursor()
+        brand = 'Ford'
+        setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE brand=?)", [brand])
 
-
-        # location_name = request.form.get("location_name")
-
-        # if location_name == 'Catamarca Province, Argentina':
-        #     return render_template('locations.html')
-
-        # return redirect("/")
+        return render_template ("focus-rs-01.html", setups=setups)
 
 
 # enable debug mode - no need to restart the server to refresh the page
