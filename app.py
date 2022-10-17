@@ -16,17 +16,6 @@ def cars():
     """Show cars"""
     if request.method == "POST":
         return redirect("/setups")
-        # car_id = request.form.get("car_id")
-
-        # connection = sql.connect("database.db")
-        # connection.row_factory = sql.Row
-
-        # db = connection.cursor()
-
-        # # Get available locations for current car
-        # setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
-
-        # return render_template ("setups.html", setups=setups)
 
     else:
         connection = sql.connect("database.db")
@@ -61,10 +50,16 @@ def show_setup():
 
         db = connection.cursor()
 
-        # Get available locations for current car
-        setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+        # Get car brand and model
+        car = db.execute("SELECT * FROM cars WHERE id=?", car_id)
+        # Use fetchone() to manipulate the object returned from query above
+        car = db.fetchone()
 
-        return render_template ("setups.html", setups=setups)
+        # Get available locations for current car
+        car_locations = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+
+
+        return render_template ("setups.html", car_locations=car_locations, car=car)
 
     else:
         connection = sql.connect("database.db")
