@@ -11,15 +11,29 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/cars")
+@app.route("/cars", methods=["GET", "POST"])
 def cars():
     """Show cars"""
-    connection = sql.connect("database.db")
-    connection.row_factory = sql.Row
+    if request.method == "POST":
+        brand_name = request.form.get("car_brand")
 
-    db = connection.cursor()
-    cars = db.execute("SELECT * FROM cars")
-    return render_template("cars.html", cars=cars)
+        connection = sql.connect("database.db")
+        connection.row_factory = sql.Row
+
+        db = connection.cursor()
+
+        setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE brand=?)", [brand_name])
+
+        return render_template ("focus-rs-01.html", setups=setups)
+
+    else:
+        connection = sql.connect("database.db")
+        connection.row_factory = sql.Row
+
+        db = connection.cursor()
+        cars = db.execute("SELECT * FROM cars")
+        return render_template("cars.html", cars=cars)
+
 
 
 @app.route("/locations")
