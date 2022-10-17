@@ -15,16 +15,18 @@ def home():
 def cars():
     """Show cars"""
     if request.method == "POST":
-        brand_name = request.form.get("car_brand")
+        return redirect("/setups")
+        # car_id = request.form.get("car_id")
 
-        connection = sql.connect("database.db")
-        connection.row_factory = sql.Row
+        # connection = sql.connect("database.db")
+        # connection.row_factory = sql.Row
 
-        db = connection.cursor()
+        # db = connection.cursor()
 
-        setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE brand=?)", [brand_name])
+        # # Get available locations for current car
+        # setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
-        return render_template ("focus-rs-01.html", setups=setups)
+        # return render_template ("setups.html", setups=setups)
 
     else:
         connection = sql.connect("database.db")
@@ -48,24 +50,29 @@ def locations():
     return render_template("locations.html", locations=locations)
 
 
-@app.route("/focus-rs-01", methods=["GET", "POST"])
+@app.route("/setups", methods=["GET", "POST"])
 def show_setup():
     """Show setup"""
     if request.method == "POST":
-        location_name = request.form.get("location_name")
+        car_id = request.form.get("car_id")
 
-        if location_name == 'Catamarca Province, Argentina':
-            return render_template('locations.html')
+        connection = sql.connect("database.db")
+        connection.row_factory = sql.Row
+
+        db = connection.cursor()
+
+        # Get available locations for current car
+        setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+
+        return render_template ("setups.html", setups=setups)
 
     else:
         connection = sql.connect("database.db")
         connection.row_factory = sql.Row
 
         db = connection.cursor()
-        brand = 'Ford'
-        setups = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE brand=?)", [brand])
-
-        return render_template ("focus-rs-01.html", setups=setups)
+        cars = db.execute("SELECT * FROM cars")
+        return render_template("cars.html", cars=cars)
 
 
 # enable debug mode - no need to restart the server to refresh the page
