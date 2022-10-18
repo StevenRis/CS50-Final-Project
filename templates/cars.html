@@ -10,12 +10,25 @@
         <h2 class="mb-2">Cars</h2>
         <div class="container-xl d-flex flex-wrap justify-content-center">
             {% for car in cars %}
-            <div class="card m-3 bg-dark text-white" style="width:400px">
+            <!-- <div class="card m-3 bg-dark text-white" style="width:400px">
                 <img class="card-img-top" src="/static/images/cars/2000cc/{{ car['car_image'] }}" alt="Car image" style="width:100%">
                 <div class="card-body">
                     <h4 class="card-title mb-3">{{ car['brand'] }} {{ car['model'] }}</h4>
                     <div class="d-grid">
                         <a href="/{{ car['car_image'] }}" class="btn btn-outline-secondary btn-block car-setup">Setups</a>
+                    </div>
+                </div>
+            </div> -->
+
+            <div class="card m-3 bg-dark text-white" style="width:400px">
+                <img class="card-img-top" src="/static/images/cars/2000cc/{{ car['car_image'] }}" alt="Car image" style="width:100%">
+                <div class="card-body">
+                    <h4 class="card-title mb-3">{{ car['brand'] }} {{ car['model'] }}</h4>
+                    <div class="d-grid">
+                        <form action="/cars/setups" method="post">
+                            <input name="car_id" value="{{ car['id'] }}" type="text" hidden>
+                            <button class="btn btn-outline-secondary btn-block car-setup" type="submit">Setups</button>
+                        </form>
                     </div>
                 </div>
             </div>
