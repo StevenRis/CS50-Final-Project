@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Ford Focus RS 01 - Argentina setups
+{% endblock %}
+
+{% block main %}
+        <table class="table shadow p-4 mb-4 bg-white">
+        <thead>
+            <tr class="table-light">
+                <th class="text-start">Tyres</th>
+                <th class="text-start">Conditions</th>
+                <th class="text-end">Toe Angle Front</th>
+                <th class="text-end">camberAngleFront</th>
+                <th class="text-end">toeAngleRear</th>
+                <th class="text-end">camberAngleRear</th>
+                <th class="text-end">brakingForce</th>
+                <th class="text-end">brakeBias</th>
+                <th class="text-end">frontLSDDrivingLock</th>
+                <th class="text-end">frontLSDBrakingLock</th>
+                <th class="text-end">frontLSDPreload</th>
+                <th class="text-end">frontVisDif</th>
+                <th class="text-end">centerVisDif</th>
+                <th class="text-end">rearVisDif</th>
+                <th class="text-end">rearLsdDrivLock</th>
+                <th class="text-end">rearLsdBrakeLock</th>
+                <th class="text-end">rearLSDPreload</th>
+                <th class="text-end">gear1</th>
+                <th class="text-end">gear2</th>
+                <th class="text-end">gear3</th>
+                <th class="text-end">gear4</th>
+                <th class="text-end">gear5</th>
+                <th class="text-end">gear6</th>
+                <th class="text-end">finalDrive</th>
+                <th class="text-end">note</th>
+                <th class="text-end">optimalShift</th>
+                <th class="text-end">slowBumpFront</th>
+                <th class="text-end">fastBumpFront</th>
+                <th class="text-end">bumpZoneDivFront</th>
+                <th class="text-end">slowReboundFront</th>
+                <th class="text-end">slowBumpRear</th>
+                <th class="text-end">fastBumpRear</th>
+                <th class="text-end">bumpZoneDivRear</th>
+                <th class="text-end">slowReboundRear</th>
+                <th class="text-end">rideHeightFront</th>
+                <th class="text-end">springRateFront</th>
+                <th class="text-end">rollBarFront</th>
+                <th class="text-end">rideHeightRear</th>
+                <th class="text-end">springRateRear</th>
+                <th class="text-end">rollBarRear</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for setup in setups %}
+            <tr class="table-dark table-stripped">
+                <td class="text-start">{{ setup['location_name'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
