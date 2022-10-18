@@ -10,22 +10,25 @@
             <h3>Location: {{ location['location_name'] }} </h3>
         </div>
         <div class="container-fluid mt-3">
-                <table class="table shadow p-4 mb-4 bg-white">
-                <thead>
-                    <tr class="table-light">
+            <table class="table shadow p-4 mb-4 bg-white">
+                    <tr>
+                        <th>Tyres</th>
+                        <th>Track condition</th>
+                    </tr>
+                    <!-- <tr class="table-light">
                         <th class="text-start">Tyres</th>
                         <th class="text-start">Conditions</th>
                         <th class="text-end">Toe Angle Front</th>
-                        <th class="text-end">camberAngleFront</th>
-                        <th class="text-end">toeAngleRear</th>
-                        <th class="text-end">camberAngleRear</th>
-                        <th class="text-end">brakingForce</th>
-                        <th class="text-end">brakeBias</th>
-                        <th class="text-end">frontLSDDrivingLock</th>
-                        <th class="text-end">frontLSDBrakingLock</th>
-                        <th class="text-end">frontLSDPreload</th>
-                        <th class="text-end">frontVisDif</th>
-                        <th class="text-end">centerVisDif</th>
+                        <th class="text-end">Camber Angle Front</th>
+                        <th class="text-end">Toe Angle Rear</th>
+                        <th class="text-end">Camber Angle Rear</th>
+                        <th class="text-end">Braking Force</th>
+                        <th class="text-end">Brake Bias</th>
+                        <th class="text-end">Front LSD Driving Lock</th>
+                        <th class="text-end">Front LSD Braking Lock</th>
+                        <th class="text-end">Front LSD Preload</th>
+                        <th class="text-end">Front Vis Dif</th>
+                        <th class="text-end">Center Vis Dif</th>
                         <th class="text-end">rearVisDif</th>
                         <th class="text-end">rearLsdDrivLock</th>
                         <th class="text-end">rearLsdBrakeLock</th>
@@ -53,8 +56,7 @@
                         <th class="text-end">rideHeightRear</th>
                         <th class="text-end">springRateRear</th>
                         <th class="text-end">rollBarRear</th>
-                    </tr>
-                </thead>
+                    </tr> -->
                 <tbody>
                     {% for setup in car_setups %}
                     <tr class="table-dark table-stripped">
