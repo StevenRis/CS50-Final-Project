@@ -1,13 +1,13 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    {{ location }}
+{{ car['model'] }}: {{ location['location_name'] }}
 {% endblock %}
 
 {% block main %}
         <div class="setups_car-title">
-            <h1>Ford Focus</h1>
-            <h3>Setup for: {{ location }} </h3>
+            <h1>{{ car['brand'] }} {{ car['model'] }}</h1>
+            <h3>Location: {{ location['location_name'] }} </h3>
         </div>
         <div class="container-fluid mt-3">
                 <table class="table shadow p-4 mb-4 bg-white">
@@ -66,7 +66,7 @@
                         <th class="text-start">{{ setup['camberAngleRear'] }}</th>
                         <th class="text-start">{{ setup['brakingForce'] }}</th>
                         <th class="text-start">{{ setup['brakeBias'] }}</th>
-                        <th class="text-start">{{ setup['rontLSDDrivingLock'] }}</th>
+                        <th class="text-start">{{ setup['frontLSDDrivingLock'] }}</th>
                         <th class="text-start">{{ setup['frontLSDBrakingLock'] }}</th>
                         <th class="text-start">{{ setup['frontLSDPreload'] }}</th>
                         <th class="text-start">{{ setup['frontVisDif'] }}</th>

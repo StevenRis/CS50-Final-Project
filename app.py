@@ -43,7 +43,7 @@ def show_car_locations():
         car = db.fetchone()
 
         # Get available locations for current car
-        car_locations = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+        car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
         return render_template ("setups.html", car_locations=car_locations, car=car)
 
@@ -59,7 +59,8 @@ def show_car_locations():
 @app.route("/cars/setups/setup", methods=["GET", "POST"])
 def show_setup():
     if request.method == "POST":
-        location = request.form.get("location_name")
+        location_id = request.form.get("location_id")
+        car_id = request.form.get("car_id")
 
         connection = sql.connect("database.db")
         connection.row_factory = sql.Row
@@ -71,10 +72,17 @@ def show_setup():
 
         # car_locations = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
-        # if location == "Catamarca Province, Argentina":
+        car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+        car = db.fetchone()
 
-        car_setups = db.execute("SELECT * FROM setups INNER JOIN locations ON setups.locations_id=locations.id WHERE id IN (SELECT id FROM locations WHERE location_name=?)", [location])
-        return render_template("car-setup.html", car_setups=car_setups, location=location)
+        location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id])
+        location = db.fetchone()
+
+        # car_setups = db.execute("SELECT * FROM setups INNER JOIN locations ON setups.locations_id=locations.id WHERE locations.id IN (SELECT id FROM locations WHERE location_name=location) INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+
+        car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+
+        return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
 
     else:
         return render_template("index.html")
