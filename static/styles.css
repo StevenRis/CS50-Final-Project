@@ -1,0 +1,13 @@
+footer, div#content {
+    display: none;
+    }
+
+div#loading {
+    position: absolute;
+    z-index: 1000;
+    cursor: wait;
+    }
+
+.setups_car-title > h1, h2 {
+    display: inline-block;
+}
