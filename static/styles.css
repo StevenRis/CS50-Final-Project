@@ -12,3 +12,6 @@ div#loading {
     display: inline-block;
 }
 
+.setup-bg {
+    background-color: rgb(196, 196, 196);
+}
