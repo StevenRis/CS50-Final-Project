@@ -18,31 +18,19 @@
             <!-- Tyres -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
-                        <tr class="table-dark">
-                            <th class="text-start">Tyres</th>
-                        </tr>
-                    </thead>
-                    <tbody>
                         <tr>
+                            <th class="table-dark text-start">Tyres</th>
                             <td class="text-start">{{ setup['tyres'] }}</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
             <!-- Conditions -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
-                        <tr class="table-dark">
-                            <th class="text-start">Track Conditions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+                        <tr class="">
+                            <th class="table-dark text-start">Track Conditions</th>
                             <td class="text-start">{{ setup['conditions'] }}</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -51,45 +39,41 @@
             <!-- Alignment -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
                         <tr class="table-dark">
                             <th class="text-center" colspan="100%">Alignment</th>
                         </tr>
                         <tr class="table-light">
                             <th class="text-start">Toe Angle Front</th>
-                            <th class="text-start">Camber Angle Front</th>
-                            <th class="text-start">Toe Angle Rear</th>
-                            <th class="text-start">Camber Angle Rear</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['toeAngleFront'] }}&deg;</td>
+                        </tr>
+                        <tr class="table-light">
+                            <th class="text-start">Camber Angle Front</th>
                             <td class="text-start">{{ setup['camberAngleFront'] }}&deg;</td>
+                        </tr>
+                        <tr class="table-light">
+                            <th class="text-start">Toe Angle Rear</th>
                             <td class="text-start">{{ setup['toeAngleRear'] }}&deg;</td>
+                        </tr>
+                        <tr class="table-light">
+                            <th class="text-start">Camber Angle Rear</th>
                             <td class="text-start">{{ setup['camberAngleRear'] }}&deg;</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
             <!-- Brakes -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
                         <tr class="table-dark">
                             <th class="text-center" colspan="100%">Brakes</th>
                         </tr>
                         <tr class="table-light">
                             <th class="text-start">Braking Force</th>
-                            <th class="text-start">Brake Bias</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['brakingForce'] }} N-m</td>
+                        </tr>
+                        <tr>
+                            <th class="text-start">Brake Bias</th>
                             <td class="text-start">{{ setup['brakeBias'] }}%</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -98,50 +82,54 @@
             <!-- Differential -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
                         <tr class="table-dark">
                             <th class="text-center" colspan="100%">Differential</th>
                         </tr>
+
                         <tr class="table-light">
                             <th class="text-start">Front LSD Driving Lock</th>
-                            <th class="text-start">Front LSD Braking Lock</th>
-                            <th class="text-start">Front LSD Preload</th>
-                    </thead>
-                    <tbody>
-                        <tr class="table-light">
                             <td class="text-start">{{ setup['frontLSDDrivingLock'] }}%</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front LSD Braking Lock</th>
                             <td class="text-start">{{ setup['frontLSDBrakingLock'] }}%</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front LSD Preload</th>
                             <td class="text-start">{{ setup['frontLSDPreload'] }} N-m</td>
                         </tr>
-                    </tbody>
-                    <thead>
                         <tr class="table-light">
-                            <th class="text-start">Rear LSD Driving Lock</th>
-                            <th class="text-start">Rear LSD Braking Lock</th>
-                            <th class="text-start">Rear LSD Preload</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+                            <th class="text-start">Front Viscous Differential</th>
                             <td class="text-start">{{ setup['frontVisDif'] }} kgf-m/100rpm</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Center Viscous Differential</th>
                             <td class="text-start">{{ setup['centerVisDif'] }} kgf-m/100rpm</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear Viscous Differential</th>
                             <td class="text-start">{{ setup['rearVisDif'] }} kgf-m/100rpm</td>
                         </tr>
-                    </tbody>
-                    <thead>
-                        <tr>
-                            <th class="text-start">Front Viscous Differential</th>
-                            <th class="text-start">Center Viscous Differential</th>
-                            <th class="text-start">Rear Viscous Differential</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear LSD Driving Lock</th>
                             <td class="text-start">{{ setup['rearLsdDrivLock'] }}%</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear LSD Braking Lock</th>
                             <td class="text-start">{{ setup['rearLsdBrakeLock'] }}%</td>
+                        </tr>
+
+                        
+                        <tr class="table-light">
+                            <th class="text-start">Rear LSD Preload</th>
                             <td class="text-start">{{ setup['rearLSDPreload'] }} N-m</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -150,52 +138,55 @@
             <!-- Gearing -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
                         <tr class="table-dark">
                             <th class="text-center" colspan="100%">Gearing</th>
                         </tr>
                         <tr class="table-light">
                             <th class="text-start">1st Gear</th>
-                            <th class="text-start">2nd Gear</th>
-                            <th class="text-start">3rd Gear</th>
-                            <th class="text-start">4ht Gear</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['gear1'] }}</td>
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">2nd Gear</th>
                             <td class="text-start">{{ setup['gear2'] }}</td>
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">3rd Gear</th>
                             <td class="text-start">{{ setup['gear3'] }}</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">4ht Gear</th>
                             <td class="text-start">{{ setup['gear4'] }}</td>
                         </tr>
-                    </tbody>
-                    <thead>
-                        <tr>
+
+                        <tr class="table-light">
                             <th class="text-start">5ht Gear</th>
-                            <th class="text-start">6ht Gear</th>
-                            <th class="text-start">Final Drive</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['gear5'] }}</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">6ht Gear</th>
                             <td class="text-start">{{ setup['gear6'] }}</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Final Drive</th>
                             <td class="text-start">{{ setup['finalDrive'] }}</td>
                         </tr>
-                    </tbody>
-                    
-                    <thead>
-                        <tr>
+
+                        <tr class="table-light">
                             <th class="text-start">Note</th>
-                            <th class="text-start">Optimal Shift</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">Final drive {{ setup['note'] }}</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Optimal Shift</th>
                             <td class="text-start">{{ setup['optimalShift'] }}</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -204,42 +195,58 @@
             <!-- Damping -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
                         <tr class="table-dark">
                             <th class="text-center" colspan="100%">Damping</th>
                         </tr>
                         <tr class="table-light">
                             <th class="text-start">Front Slow Bump</th>
-                            <th class="text-start">Front Fast Bump</th>
-                            <th class="text-start">Front Bump Zone Division</th>
-                            <th class="text-start">Front Slow Rebound</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['slowBumpFront'] }}</td>
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front Fast Bump</th>
                             <td class="text-start">{{ setup['fastBumpFront'] }}</td>
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front Bump Zone Division</th>
                             <td class="text-start">{{ setup['bumpZoneDivFront'] }} mps</td>
+
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front Slow Rebound</th>
                             <td class="text-start">{{ setup['slowReboundFront'] }}</td>
+
                         </tr>
-                    </tbody>
-                    <thead>
-                        <tr>
+
+                        <tr class="table-light">
                             <th class="text-start">Rear Slow Bump</th>
-                            <th class="text-start">Rear Fast Bump</th>
-                            <th class="text-start">Rear Bump Zone Division</th>
-                            <th class="text-start">Rear Slow Rebound</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['slowBumpRear'] }}</td>
-                            <td class="text-start">{{ setup['fastBumpRear'] }}</td>
-                            <td class="text-start">{{ setup['bumpZoneDivRear'] }} mps</td>
-                            <td class="text-start">{{ setup['slowReboundRear'] }}</td>
+
                         </tr>
-                    </tbody>
-                </table>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear Fast Bump</th>
+                            <td class="text-start">{{ setup['fastBumpRear'] }}</td>
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear Bump Zone Division</th>
+                            <td class="text-start">{{ setup['bumpZoneDivRear'] }} mps</td>
+
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear Slow Rebound</th>
+                            <td class="text-start">{{ setup['slowReboundRear'] }}</td>
+
+                        </tr>
+
             </div>
         </div>
 
@@ -247,37 +254,38 @@
             <!-- Springs -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                    <thead>
                         <tr class="table-dark">
                             <th class="text-center" colspan="100%">Springs</th>
                         </tr>
                         <tr class="table-light">
                             <th class="text-start">Front Ride Height</th>
-                            <th class="text-start">Front Spring Rate</th>
-                            <th class="text-start">Front Anti-Roll Bar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['rideHeightFront'] }} mm</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front Spring Rate</th>
                             <td class="text-start">{{ setup['springRateFront'] }} N/mm</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Front Anti-Roll Bar</th>
                             <td class="text-start">{{ setup['rollBarFront'] }} N/mm</td>
                         </tr>
-                    </tbody>
-                    <thead>
-                        <tr>
+
+                        <tr class="table-light">
                             <th class="text-start">Rear Ride Height</th>
-                            <th class="text-start">Rear Spring Rate</th>
-                            <th class="text-start">Rear Anti-Roll Bar</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
                             <td class="text-start">{{ setup['rideHeightRear'] }} mm</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear Spring Rate</th>
                             <td class="text-start">{{ setup['springRateRear'] }} N/mm</td>
+                        </tr>
+
+                        <tr class="table-light">
+                            <th class="text-start">Rear Anti-Roll Bar</th>
                             <td class="text-start">{{ setup['rollBarRear'] }} N/mm</td>
                         </tr>
-                    </tbody>
                 </table>
             </div>
         </div>
