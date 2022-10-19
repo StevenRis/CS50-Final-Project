@@ -18,19 +18,19 @@
             <!-- Tyres -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                        <tr>
-                            <th class="table-dark text-start">Tyres</th>
-                            <td class="text-start">{{ setup['tyres'] }}</td>
-                        </tr>
+                    <tr>
+                        <th class="table-dark text-start">Tyres</th>
+                        <td class="text-start">{{ setup['tyres'] }}</td>
+                    </tr>
                 </table>
             </div>
             <!-- Conditions -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                        <tr class="">
-                            <th class="table-dark text-start">Track Conditions</th>
-                            <td class="text-start">{{ setup['conditions'] }}</td>
-                        </tr>
+                    <tr class="">
+                        <th class="table-dark text-start">Track Conditions</th>
+                        <td class="text-start">{{ setup['conditions'] }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -38,42 +38,42 @@
         <div class="d-flex flex-wrap">
             <!-- Alignment -->
             <div class="container-fluid mt-3">
-                <table class="table table-striped shadow p-4 mb-4 bg-white">
-                        <tr class="table-dark">
-                            <th class="text-center" colspan="100%">Alignment</th>
-                        </tr>
-                        <tr class="table-light">
-                            <th class="text-start">Toe Angle Front</th>
-                            <td class="text-start">{{ setup['toeAngleFront'] }}&deg;</td>
-                        </tr>
-                        <tr class="table-light">
-                            <th class="text-start">Camber Angle Front</th>
-                            <td class="text-start">{{ setup['camberAngleFront'] }}&deg;</td>
-                        </tr>
-                        <tr class="table-light">
-                            <th class="text-start">Toe Angle Rear</th>
-                            <td class="text-start">{{ setup['toeAngleRear'] }}&deg;</td>
-                        </tr>
-                        <tr class="table-light">
-                            <th class="text-start">Camber Angle Rear</th>
-                            <td class="text-start">{{ setup['camberAngleRear'] }}&deg;</td>
-                        </tr>
+                <table class="table table-sm table-boardered table-striped shadow p-4 mb-4 bg-white ">
+                    <tr class="table-dark">
+                        <th class="text-center" colspan="100%">Alignment</th>
+                    </tr>
+                    <tr class="table-light">
+                        <th class="text-start">Toe Angle Front</th>
+                        <td class="text-start">{{ setup['toeAngleFront'] }}&deg;</td>
+                    </tr>
+                    <tr class="table-light">
+                        <th class="text-start">Camber Angle Front</th>
+                        <td class="text-start">{{ setup['camberAngleFront'] }}&deg;</td>
+                    </tr>
+                    <tr class="table-light">
+                        <th class="text-start">Toe Angle Rear</th>
+                        <td class="text-start">{{ setup['toeAngleRear'] }}&deg;</td>
+                    </tr>
+                    <tr class="table-light">
+                        <th class="text-start">Camber Angle Rear</th>
+                        <td class="text-start">{{ setup['camberAngleRear'] }}&deg;</td>
+                    </tr>
                 </table>
             </div>
             <!-- Brakes -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
-                        <tr class="table-dark">
-                            <th class="text-center" colspan="100%">Brakes</th>
-                        </tr>
-                        <tr class="table-light">
-                            <th class="text-start">Braking Force</th>
-                            <td class="text-start">{{ setup['brakingForce'] }} N-m</td>
-                        </tr>
-                        <tr>
-                            <th class="text-start">Brake Bias</th>
-                            <td class="text-start">{{ setup['brakeBias'] }}%</td>
-                        </tr>
+                    <tr class="table-dark">
+                        <th class="text-center" colspan="100%">Brakes</th>
+                    </tr>
+                    <tr class="table-light">
+                        <th class="text-start">Braking Force</th>
+                        <td class="text-start">{{ setup['brakingForce'] }} N-m</td>
+                    </tr>
+                    <tr>
+                        <th class="text-start">Brake Bias</th>
+                        <td class="text-start">{{ setup['brakeBias'] }}%</td>
+                    </tr>
                 </table>
             </div>
         </div>
