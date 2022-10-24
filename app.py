@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, session, flash
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
-import sqlite3 as sql
+import sqlite3
 
 from helpers import login_required
 
@@ -18,25 +18,35 @@ app.config["TEMPLATES_AUTO_RELOAD"] = True
 
 # Connect database
 def db_connection():
-    connection = sql.connect("database.db")
-    connection.row_factory = sql.Row
+    connection = sqlite3.connect("database.db")
+    connection.row_factory = sqlite3.Row
     return connection
 
 
 @app.route("/")
-@app.route("/home")
 @login_required
-def home():
+def index():
 
-    user_id = session("user_id")
+    user_id = session["user_id"]
+
 
     db = db_connection()
     username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
 
     username = username[0]["username"]
-
     db.close()
+
+    if not user_id:
+        username = 'Anonymous'
+        # return username
+
     return render_template("index.html", username=username)
+
+
+@app.route("/home")
+def home():
+
+    return redirect("/locations")
 
 
 @app.route("/cars", methods=["GET", "POST"])
@@ -85,15 +95,8 @@ def show_setup():
 
         db = db_connection()
         car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
-        # car = db.fetchall()
 
         location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
-
-        # locate = location[0]["location_name"]
-        # print(location[0]["location_name"])
-        # location = db.fetchall()
-
-        # car_setups = db.execute("SELECT * FROM setups INNER JOIN locations ON setups.locations_id=locations.id WHERE locations.id IN (SELECT id FROM locations WHERE location_name=location) INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
         car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
 
@@ -115,6 +118,7 @@ def locations():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
+
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -122,15 +126,59 @@ def register():
         hash = generate_password_hash(password)
 
         db = db_connection()
-        new_user = db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
-        session["user_id"] = new_user.fetchone()
+        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
         db.commit()
+
+        new_user = db.execute("SELECT id FROM users WHERE username=?", [username]).fetchone()
         db.close()
+
+        session["user_id"] = new_user["id"]
 
         return redirect("/")
 
     else:
         return render_template("register.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """Log user in"""
+
+    # Forget any user_id
+    session.clear()
+
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        
+        # Query database for username
+        db = db_connection()
+        users = db.execute("SELECT * FROM users WHERE username=?", [username]).fetchall()
+        print(users)
+
+        if len(users) != 1 or not check_password_hash(users[0]["hash"], password):
+            print("invalid username and/or password")
+            return redirect ("error.html")
+
+        db.close()
+        # Remember which user has logged in
+        session["user_id"] = users[0]["id"]
+
+        print(f'User id: {users[0]["id"]}')
+
+        # Redirect user to home page
+        return redirect("/")
+
+    # User reached route via GET (as by clicking a link or via redirect)
+    else:
+        return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+    return redirect('/')
 
 # enable debug mode - no need to restart the server to refresh the page
 # python app.py - run the server

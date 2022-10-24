@@ -5,10 +5,11 @@
 {% endblock %}
 
 {% block main %}
-    <h1>
-        Hello, {{ user }}!
-
-    </h1>
+    {% if session["user_id"] %}
+        You are Register {{ username }} <a href="/logout">logout</a>.
+    {% else %}
+        You are not Register. <a href="/login">login</a>.
+    {% endif %}
 
     <h1>Hi, you're on the home page</h1>
     
