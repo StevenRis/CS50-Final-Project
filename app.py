@@ -4,6 +4,8 @@ from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3 as sql
 
+from helpers import login_required
+
 app = Flask(__name__)
 
 # Configure session to use filesystem (instead of signed cookies)
@@ -14,42 +16,54 @@ Session(app)
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
+# Connect database
+def db_connection():
+    connection = sql.connect("database.db")
+    connection.row_factory = sql.Row
+    return connection
+
 
 @app.route("/")
+@app.route("/home")
+@login_required
 def home():
-    return render_template("index.html")
+
+    user_id = session("user_id")
+
+    db = db_connection()
+    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
+
+    username = username[0]["username"]
+
+    db.close()
+    return render_template("index.html", username=username)
 
 
 @app.route("/cars", methods=["GET", "POST"])
 def cars():
     """Show cars"""
+
     if request.method == "POST":
         return redirect("/cars/setups")
 
     else:
-        connection = sql.connect("database.db")
-        connection.row_factory = sql.Row
-
-        db = connection.cursor()
-        cars = db.execute("SELECT * FROM cars")
+        db = db_connection()
+        cars = db.execute("SELECT * FROM cars").fetchall()
         return render_template("cars.html", cars=cars)
 
 
 @app.route("/cars/setups", methods=["GET", "POST"])
 def show_car_locations():
-    """Show setup"""
     if request.method == "POST":
         car_id = request.form.get("car_id")
 
-        connection = sql.connect("database.db")
-        connection.row_factory = sql.Row
-
-        db = connection.cursor()
-
+        db = db_connection()
         # Get car brand and model
-        car = db.execute("SELECT * FROM cars WHERE id=?", car_id)
+        car = db.execute("SELECT * FROM cars WHERE id=?", car_id).fetchone()
         # Use fetchone() to manipulate the object returned from query above
-        car = db.fetchone()
+        # car = db.fetchall() //no use
+
+        print(car["brand"])
 
         # Get available locations for current car
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
@@ -57,35 +71,27 @@ def show_car_locations():
         return render_template ("setups.html", car_locations=car_locations, car=car)
 
     else:
-        connection = sql.connect("database.db")
-        connection.row_factory = sql.Row
-
-        db = connection.cursor()
+        db = db_connection()
         cars = db.execute("SELECT * FROM cars")
         return render_template("cars.html", cars=cars)
 
 
 @app.route("/cars/setups/setup", methods=["GET", "POST"])
 def show_setup():
+    """Show setup"""
     if request.method == "POST":
         location_id = request.form.get("location_id")
         car_id = request.form.get("car_id")
 
-        connection = sql.connect("database.db")
-        connection.row_factory = sql.Row
+        db = db_connection()
+        car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+        # car = db.fetchall()
 
-        db = connection.cursor()
+        location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
 
-        # car = db.execute("SELECT * FROM cars WHERE id=?", car_id)
-        # car = db.fetchone()
-
-        # car_locations = db.execute("SELECT DISTINCT location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
-
-        car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
-        car = db.fetchone()
-
-        location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id])
-        location = db.fetchone()
+        # locate = location[0]["location_name"]
+        # print(location[0]["location_name"])
+        # location = db.fetchall()
 
         # car_setups = db.execute("SELECT * FROM setups INNER JOIN locations ON setups.locations_id=locations.id WHERE locations.id IN (SELECT id FROM locations WHERE location_name=location) INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
@@ -100,14 +106,31 @@ def show_setup():
 @app.route("/locations")
 def locations():
     """Show locations"""
-    connection = sql.connect("database.db")
-    connection.row_factory = sql.Row
-
-    db = connection.cursor()
+    db = db_connection()
     locations = db.execute("SELECT * FROM locations")
 
     return render_template("locations.html", locations=locations)
 
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register user"""
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        confirmationPassword = request.form.get("confirmation")
+        hash = generate_password_hash(password)
+
+        db = db_connection()
+        new_user = db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
+        session["user_id"] = new_user.fetchone()
+        db.commit()
+        db.close()
+
+        return redirect("/")
+
+    else:
+        return render_template("register.html")
 
 # enable debug mode - no need to restart the server to refresh the page
 # python app.py - run the server
