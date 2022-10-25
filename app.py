@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, session, flash
+from flask import Flask, render_template, redirect, request, session, flash, url_for
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -133,20 +133,47 @@ def locations():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     """Register user"""
-
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
         confirmationPassword = request.form.get("confirmation")
         hash = generate_password_hash(password)
 
+        # Check the username and password were submited
+        if not username:
+            flash("Please enter username")
+            return redirect ('/apology')
+
+        if not password:
+            flash("Please enter password")
+            return redirect ('/apology')
+
+        # Check confirmation password is not empty
+        if not confirmationPassword:
+            flash("Please confirm the password")
+            return redirect ('/apology')
+
+        # Check password and the confrmation password are the same
+        if confirmationPassword != password:
+            flash("Passwords are not the same")
+            return redirect ('/apology')
+
         db = db_connection()
-        db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
-        db.commit()
 
+        # Add user and password to database
+        try:
+            db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
+            db.commit()
+        except:
+            # If username is already exists display error
+            flash("User name already exists")
+            return redirect ('/apology')
+
+        # Get new user from database
         new_user = db.execute("SELECT id FROM users WHERE username=?", [username]).fetchone()
-        db.close()
+        db.close() #close connection with database
 
+        # Remeber new user in session
         session["user_id"] = new_user["id"]
 
         return redirect("/")
@@ -158,28 +185,36 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-
     # Forget any user_id
     session.clear()
 
+    # User reached route via POST (as by submitting a form via POST)
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
-        
+
+        # Check the username and password were submited
+        if not username:
+            flash("Please provide username")
+            return redirect ('/apology')
+
+        elif not password:
+            flash("Please provide password", 403)
+            return redirect ('/apology')
+
+        db = db_connection() # Connect database
         # Query database for username
-        db = db_connection()
         users = db.execute("SELECT * FROM users WHERE username=?", [username]).fetchall()
-        print(users)
 
+        # Check username and password are correct
         if len(users) != 1 or not check_password_hash(users[0]["hash"], password):
-            print("invalid username and/or password")
-            return redirect ("error.html")
+            flash("Invalid username and/or password")
+            return redirect ('/apology')
 
-        db.close()
+        db.close() # Close connection with database
+
         # Remember which user has logged in
         session["user_id"] = users[0]["id"]
-
-        print(f'User id: {users[0]["id"]}')
 
         # Redirect user to home page
         return redirect("/")
@@ -191,9 +226,17 @@ def login():
 
 @app.route("/logout")
 def logout():
-
     session.clear()
     return redirect('/')
+
+
+@app.route("/about")
+def about():
+    return render_template('about.html')
+
+@app.route("/apology")
+def apology():
+    return render_template('apology.html')
 
 # enable debug mode - no need to restart the server to refresh the page
 # python app.py - run the server
