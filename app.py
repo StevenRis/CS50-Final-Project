@@ -234,9 +234,55 @@ def logout():
 def about():
     return render_template('about.html')
 
+
 @app.route("/apology")
 def apology():
     return render_template('apology.html')
+
+
+@app.route("/password_reset", methods=["GET", "POST"])
+def reset():
+    """Reset password"""
+    if request.method == "GET":
+        return render_template("password_reset.html")
+
+    else:
+        username = request.form.get("username")
+        new_password = request.form.get("new_password")
+        confirmationPassword = request.form.get("confirmation")
+        hash = generate_password_hash(new_password)
+
+        # Check the username and password were submited
+        if not username:
+            flash("Please enter username")
+            return redirect ('/apology')
+
+        if not new_password:
+            flash("Please enter password")
+            return redirect ('/apology')
+
+        # Check confirmation password is not empty
+        if not confirmationPassword:
+            flash("Please confirm the password")
+            return redirect ('/apology')
+
+        # Check password and the confrmation password are the same
+        if confirmationPassword != new_password:
+            flash("Passwords are not the same")
+            return redirect ('/apology')
+
+        db = db_connection() # Connect database
+        user_id = db.execute("SELECT id FROM users WHERE username=?", [username]).fetchone()["id"] # Get user id from database
+
+        # print(f'\n\n{user_id}\n\n')
+        # Updata password
+        db.execute("UPDATE users SET hash=? WHERE id=?", [hash, user_id])
+        db.commit() # Commit changes
+        db.close() # Close connection with database
+        flash("Password was reset.")
+
+
+        return redirect('/')
 
 # enable debug mode - no need to restart the server to refresh the page
 # python app.py - run the server
