@@ -46,7 +46,22 @@ def index():
 @app.route("/home")
 def home():
 
-    return redirect("/locations")
+    return render_template("index.html")
+
+
+@app.route("/account", methods=["GET", "POST"])
+def account():
+
+    if request.method == "GET":
+        user_id = session["user_id"]
+
+        db = db_connection()
+        username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
+
+        username = username[0]["username"]
+        db.close()
+
+        return render_template("account.html", username=username)
 
 
 @app.route("/cars", methods=["GET", "POST"])
