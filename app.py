@@ -26,9 +26,33 @@ def db_connection():
 @app.route("/")
 @login_required
 def index():
-
+    # Define current user by id from session
     user_id = session["user_id"]
 
+    db = db_connection() #connect database
+    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
+
+    username = username[0]["username"]
+    db.close()
+
+    if user_id == 0:
+        username = "Anonymous"
+
+    print(f'\n\n{user_id}\n\n')
+
+    return render_template("index.html", username=username)
+
+
+@app.route("/home")
+def home():
+    username = "Anonymous"
+    return render_template("index.html", username=username)
+
+
+@app.route("/account/<username>", methods=["GET", "POST"])
+def account(username):
+
+    user_id = session["user_id"]
 
     db = db_connection()
     username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
@@ -36,32 +60,7 @@ def index():
     username = username[0]["username"]
     db.close()
 
-    if not user_id:
-        username = 'Anonymous'
-        # return username
-
-    return render_template("index.html", username=username)
-
-
-@app.route("/home")
-def home():
-
-    return render_template("index.html")
-
-
-@app.route("/account", methods=["GET", "POST"])
-def account():
-
-    if request.method == "GET":
-        user_id = session["user_id"]
-
-        db = db_connection()
-        username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
-
-        username = username[0]["username"]
-        db.close()
-
-        return render_template("account.html", username=username)
+    return render_template("account.html", username=username)
 
 
 @app.route("/cars", methods=["GET", "POST"])
@@ -234,9 +233,55 @@ def logout():
 def about():
     return render_template('about.html')
 
+
 @app.route("/apology")
 def apology():
     return render_template('apology.html')
+
+
+@app.route("/password_reset", methods=["GET", "POST"])
+def reset():
+    """Reset password"""
+    if request.method == "GET":
+        return render_template("password_reset.html")
+
+    else:
+        username = request.form.get("username")
+        new_password = request.form.get("new_password")
+        confirmationPassword = request.form.get("confirmation")
+        hash = generate_password_hash(new_password)
+
+        # Check the username and password were submited
+        if not username:
+            flash("Please enter username")
+            return redirect ('/apology')
+
+        if not new_password:
+            flash("Please enter password")
+            return redirect ('/apology')
+
+        # Check confirmation password is not empty
+        if not confirmationPassword:
+            flash("Please confirm the password")
+            return redirect ('/apology')
+
+        # Check password and the confrmation password are the same
+        if confirmationPassword != new_password:
+            flash("Passwords are not the same")
+            return redirect ('/apology')
+
+        db = db_connection() # Connect database
+        user_id = db.execute("SELECT id FROM users WHERE username=?", [username]).fetchone()["id"] # Get user id from database
+
+        # print(f'\n\n{user_id}\n\n')
+        # Updata password
+        db.execute("UPDATE users SET hash=? WHERE id=?", [hash, user_id])
+        db.commit() # Commit changes
+        db.close() # Close connection with database
+        flash("Password was reset.")
+
+
+        return redirect('/')
 
 # enable debug mode - no need to restart the server to refresh the page
 # python app.py - run the server
