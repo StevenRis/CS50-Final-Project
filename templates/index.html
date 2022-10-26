@@ -5,10 +5,13 @@
 {% endblock %}
 
 {% block main %}
+    {% if username %}
 
+        <h1>Hi, {{ username }}!</h1>
 
-    <h1>Hi, {{ username }} you're on the home page</h1>
+    {% else %}
 
+        <h1>Hi, guest!</h1>
 
-
+    {% endif %}
 {% endblock %}

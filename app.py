@@ -22,62 +22,49 @@ def db_connection():
     connection.row_factory = sqlite3.Row
     return connection
 
+# Define current user from session
+def define_user():
+    user_id = session["user_id"]
+    db = db_connection()
+    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()[0]["username"]
+    db.close()
+    return username
+
 
 @app.route("/")
 @login_required
 def index():
-    # Define current user by id from session
-    user_id = session["user_id"]
-
-    db = db_connection() #connect database
-    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
-
-    username = username[0]["username"]
-    db.close()
-
-    if user_id == 0:
-        username = "Anonymous"
-
-    print(f'\n\n{user_id}\n\n')
-
+    username = define_user()
     return render_template("index.html", username=username)
 
 
 @app.route("/home")
 def home():
-    username = "Anonymous"
-    return render_template("index.html", username=username)
+    return render_template("index.html")
 
 
-@app.route("/account/<username>", methods=["GET", "POST"])
-def account(username):
-
-    user_id = session["user_id"]
-
-    db = db_connection()
-    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
-
-    username = username[0]["username"]
-    db.close()
-
+@app.route("/account")
+def account():
+    username = define_user()
     return render_template("account.html", username=username)
 
 
 @app.route("/cars", methods=["GET", "POST"])
 def cars():
     """Show cars"""
-
-    if request.method == "POST":
-        return redirect("/cars/setups")
-
-    else:
+    if request.method == "GET":
         db = db_connection()
         cars = db.execute("SELECT * FROM cars").fetchall()
+
         return render_template("cars.html", cars=cars)
 
+    else:
+        # return redirect("/cars/setups")
+        return render_template("setups.html")
 
-@app.route("/cars/setups", methods=["GET", "POST"])
-def show_car_locations():
+
+@app.route("/cars/<model>", methods=["GET", "POST"])
+def show_car_locations(model):
     if request.method == "POST":
         car_id = request.form.get("car_id")
 
@@ -85,9 +72,6 @@ def show_car_locations():
         # Get car brand and model
         car = db.execute("SELECT * FROM cars WHERE id=?", car_id).fetchone()
         # Use fetchone() to manipulate the object returned from query above
-        # car = db.fetchall() //no use
-
-        print(car["brand"])
 
         # Get available locations for current car
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
@@ -96,8 +80,53 @@ def show_car_locations():
 
     else:
         db = db_connection()
-        cars = db.execute("SELECT * FROM cars")
-        return render_template("cars.html", cars=cars)
+        cars_model = db.execute("SELECT model FROM cars").fetchall()
+        print('line 85')
+        print(cars_model)
+        # print(f'model from url {model}')
+
+        # if model in cars_model:
+        #     print("YES")
+
+        # for car in cars_model:
+        #     print(car['model'])
+        #     if model == car['model']:
+        #         print("YES")
+        # this variable will accept car model from database
+        # after checking if model name from url is in the database
+        car_model = ""
+
+        # Check the car model, recieved from url is in the database
+        # if not, flash error
+        for car in cars_model:
+            print('line 103')
+            print(car['model'])
+            if model in car['model'] or model == car['model']:
+                print("YES")
+                car_model += car["model"]
+                print(f"fromloop line 106: {car_model}")
+                # break
+        # print(f'\n\ncar_model: {car_model}\n\n')
+        # Define what is the current car to display
+        try:
+            car = db.execute("SELECT * FROM cars WHERE model=?", [car_model]).fetchone()
+            # Get car's id
+            car_id = car['id']
+        except:
+            print('There"s no such car you are looking for!')
+            flash("There's no such car you are looking for!")
+            return redirect("/apology")
+        car = db.execute("SELECT * FROM cars WHERE model=?", [car_model]).fetchone()
+        print(f'line 117. car {car["model"]}')
+        print(f'car_id {car["id"]}')
+        print(f'model from url {model}')
+
+
+        # Get locations that are available for the current car's id
+        # which will be displayed to the user
+        car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+
+        return render_template("setups.html", car=car, model=model, car_locations=car_locations)
 
 
 @app.route("/cars/setups/setup", methods=["GET", "POST"])
