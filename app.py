@@ -80,10 +80,9 @@ def show_car_locations(model):
 
     else:
         db = db_connection()
-        cars_model = db.execute("SELECT model FROM cars").fetchall()
-        print('line 85')
-        print(cars_model)
-        # print(f'model from url {model}')
+        # cars_model = db.execute("SELECT model FROM cars").fetchall()
+        # print(cars_model)
+        print(f'model from url {model}')
 
         # if model in cars_model:
         #     print("YES")
@@ -94,31 +93,27 @@ def show_car_locations(model):
         #         print("YES")
         # this variable will accept car model from database
         # after checking if model name from url is in the database
-        car_model = ""
+        # car_model = ''
 
         # Check the car model, recieved from url is in the database
         # if not, flash error
-        for car in cars_model:
-            print('line 103')
-            print(car['model'])
-            if model in car['model'] or model == car['model']:
-                print("YES")
-                car_model += car["model"]
-                print(f"fromloop line 106: {car_model}")
-                # break
-        # print(f'\n\ncar_model: {car_model}\n\n')
+        # for car in cars_model:
+        #     print(car['model'])
+        #     if model == car['model']:
+        #         car_model += car["model"]
+        #         print("YES")
+
         # Define what is the current car to display
         try:
-            car = db.execute("SELECT * FROM cars WHERE model=?", [car_model]).fetchone()
+            car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
             # Get car's id
             car_id = car['id']
         except:
             print('There"s no such car you are looking for!')
             flash("There's no such car you are looking for!")
             return redirect("/apology")
-        car = db.execute("SELECT * FROM cars WHERE model=?", [car_model]).fetchone()
-        print(f'line 117. car {car["model"]}')
-        print(f'car_id {car["id"]}')
+
+        print(f'car_id {car_id}')
         print(f'model from url {model}')
 
 
