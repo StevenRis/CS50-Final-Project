@@ -51,7 +51,7 @@ def account():
 
 @app.route("/cars", methods=["GET", "POST"])
 def cars():
-    """Show cars"""
+    """Display cars"""
     if request.method == "GET":
         db = db_connection()
         cars = db.execute("SELECT * FROM cars").fetchall()
@@ -65,13 +65,15 @@ def cars():
 
 @app.route("/cars/<model>", methods=["GET", "POST"])
 def show_car_locations(model):
+    """Display car's location that was clicked"""
     if request.method == "POST":
+        # Get car's id from the car card
+        # that was clicked
         car_id = request.form.get("car_id")
 
         db = db_connection()
-        # Get car brand and model
+        # Get car's data for current car
         car = db.execute("SELECT * FROM cars WHERE id=?", car_id).fetchone()
-        # Use fetchone() to manipulate the object returned from query above
 
         # Get available locations for current car
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
@@ -79,46 +81,26 @@ def show_car_locations(model):
         return render_template ("setups.html", car_locations=car_locations, car=car)
 
     else:
+        # When user reach route via GET (as by clicking a link or via redirect)
+        # define the current car from the link by getting the model from url
         db = db_connection()
-        # cars_model = db.execute("SELECT model FROM cars").fetchall()
-        # print(cars_model)
-        print(f'model from url {model}')
 
-        # if model in cars_model:
-        #     print("YES")
-
-        # for car in cars_model:
-        #     print(car['model'])
-        #     if model == car['model']:
-        #         print("YES")
-        # this variable will accept car model from database
-        # after checking if model name from url is in the database
-        # car_model = ''
-
-        # Check the car model, recieved from url is in the database
-        # if not, flash error
-        # for car in cars_model:
-        #     print(car['model'])
-        #     if model == car['model']:
-        #         car_model += car["model"]
-        #         print("YES")
-
-        # Define what is the current car to display
+        # Check the model exists in the database
         try:
             car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
-            # Get car's id
+
+            # Get car's id to use while queriing the location table
             car_id = car['id']
         except:
-            print('There"s no such car you are looking for!')
+            # If model from the url doesn't exist in the dabase
+            # then display flash message
+            # and display the apology page
             flash("There's no such car you are looking for!")
             return redirect("/apology")
 
-        print(f'car_id {car_id}')
-        print(f'model from url {model}')
-
-
-        # Get locations that are available for the current car's id
+        # Get locations that are available for the current car
         # which will be displayed to the user
+        # by using the car_id
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
         return render_template("setups.html", car=car, model=model, car_locations=car_locations)
@@ -300,7 +282,9 @@ def reset():
         # print(f'\n\n{user_id}\n\n')
         # Updata password
         db.execute("UPDATE users SET hash=? WHERE id=?", [hash, user_id])
-        db.commit() # Commit changes
+
+        # Commit changes on database
+        db.commit() 
         db.close() # Close connection with database
         flash("Password was reset.")
 
