@@ -11,3 +11,22 @@ div#loading {
 .setups_car-title > h1, h2 {
     display: inline-block;
 }
+
+.setup-bg {
+    background-color: #EDEDED;
+}
+
+.table-light > th {
+    width: 35%;
+}
+
+
+@media (min-width: 375px) {
+    .table {
+        width: 100%;
+    }
+
+    .table-light > th {
+        width: 50%;
+    }
+}
