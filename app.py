@@ -26,9 +26,33 @@ def db_connection():
 @app.route("/")
 @login_required
 def index():
-
+    # Define current user by id from session
     user_id = session["user_id"]
 
+    db = db_connection() #connect database
+    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
+
+    username = username[0]["username"]
+    db.close()
+
+    if user_id == 0:
+        username = "Anonymous"
+
+    print(f'\n\n{user_id}\n\n')
+
+    return render_template("index.html", username=username)
+
+
+@app.route("/home")
+def home():
+    username = "Anonymous"
+    return render_template("index.html", username=username)
+
+
+@app.route("/account/<username>", methods=["GET", "POST"])
+def account(username):
+
+    user_id = session["user_id"]
 
     db = db_connection()
     username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
@@ -36,32 +60,7 @@ def index():
     username = username[0]["username"]
     db.close()
 
-    if not user_id:
-        username = 'Anonymous'
-        # return username
-
-    return render_template("index.html", username=username)
-
-
-@app.route("/home")
-def home():
-
-    return render_template("index.html")
-
-
-@app.route("/account", methods=["GET", "POST"])
-def account():
-
-    if request.method == "GET":
-        user_id = session["user_id"]
-
-        db = db_connection()
-        username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
-
-        username = username[0]["username"]
-        db.close()
-
-        return render_template("account.html", username=username)
+    return render_template("account.html", username=username)
 
 
 @app.route("/cars", methods=["GET", "POST"])
