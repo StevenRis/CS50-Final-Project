@@ -106,8 +106,8 @@ def show_car_locations(model):
         return render_template("setups.html", car=car, model=model, car_locations=car_locations)
 
 
-@app.route("/cars/setups/setup", methods=["GET", "POST"])
-def show_setup():
+@app.route("/cars/<model>/<location>", methods=["GET", "POST"])
+def show_setup(model, location):
     """Show setup"""
     if request.method == "POST":
         location_id = request.form.get("location_id")
@@ -123,7 +123,26 @@ def show_setup():
         return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
 
     else:
-        return render_template("index.html")
+        db = db_connection()
+
+        # Check the model exists in the database
+        try:
+            car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
+            loc = db.execute("SELECT * FROM locations WHERE location_name=?", [location]).fetchone()
+            # Get car's id to use while queriing the location table
+            car_id = car['id']
+            location_id = loc["id"]
+            location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+        except:
+            # If model from the url doesn't exist in the dabase
+            # then display flash message
+            # and display the apology page
+            flash("There's no such location you are looking for!")
+            return redirect("/apology")
+
+        car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+
+        return render_template("car-setup.html", car=car, model=model, car_setups=car_setups, location=location)
 
 
 @app.route("/locations")
