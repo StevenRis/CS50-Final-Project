@@ -14,13 +14,13 @@
     {% for setup in car_setups %}
 
     <div class="container my-5 pt-2 shadow-lg rounded-5 setup-bg">
-        <div class="d-flex">
+        <div class="d-flex flex-container">
             <!-- Tyres -->
             <div class="container-fluid mt-3">
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
                     <tr>
                         <th class="table-dark text-start">Tyres</th>
-                        <td class="text-start">{{ setup['tyres'] }}</td>
+                        <td class="text-start table-success">{{ setup['tyres'] }}</td>
                     </tr>
                 </table>
             </div>
@@ -29,7 +29,16 @@
                 <table class="table table-striped shadow p-4 mb-4 bg-white">
                     <tr class="">
                         <th class="table-dark text-start">Track Conditions</th>
-                        <td class="text-start">{{ setup['conditions'] }}</td>
+                        <td class="text-start table-success">{{ setup['conditions'] }}</td>
+                    </tr>
+                </table>
+            </div>
+            <!-- Surface -->
+            <div class="container-fluid mt-3">
+                <table class="table table-striped shadow p-4 mb-4 bg-white">
+                    <tr class="">
+                        <th class="table-dark text-start">Track Surface</th>
+                        <td class="text-start table-success">{{ setup['surface'] }}</td>
                     </tr>
                 </table>
             </div>
@@ -290,6 +299,7 @@
             </div>
         </div>
     </div>
+    <hr>
 
     {% endfor %}
 
