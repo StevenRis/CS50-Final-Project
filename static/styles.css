@@ -30,3 +30,9 @@ div#loading {
         width: 50%;
     }
 }
+
+@media (max-width: 450px) {
+    .flex-container {
+        flex-wrap: wrap;
+    }
+}
