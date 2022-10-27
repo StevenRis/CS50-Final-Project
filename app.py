@@ -22,72 +22,58 @@ def db_connection():
     connection.row_factory = sqlite3.Row
     return connection
 
+# Define current user from session
+def define_user():
+    user_id = session["user_id"]
+    db = db_connection()
+    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()[0]["username"]
+    db.close()
+    return username
+
 
 @app.route("/")
 @login_required
 def index():
-    # Define current user by id from session
-    user_id = session["user_id"]
-
-    db = db_connection() #connect database
-    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
-
-    username = username[0]["username"]
-    db.close()
-
-    if user_id == 0:
-        username = "Anonymous"
-
-    print(f'\n\n{user_id}\n\n')
-
+    username = define_user()
     return render_template("index.html", username=username)
 
 
 @app.route("/home")
 def home():
-    username = "Anonymous"
-    return render_template("index.html", username=username)
+    return render_template("index.html")
 
 
-@app.route("/account/<username>", methods=["GET", "POST"])
-def account(username):
-
-    user_id = session["user_id"]
-
-    db = db_connection()
-    username = db.execute("SELECT username FROM users WHERE id=?", [user_id]).fetchall()
-
-    username = username[0]["username"]
-    db.close()
-
+@app.route("/account")
+def account():
+    username = define_user()
     return render_template("account.html", username=username)
 
 
 @app.route("/cars", methods=["GET", "POST"])
 def cars():
-    """Show cars"""
-
-    if request.method == "POST":
-        return redirect("/cars/setups")
-
-    else:
+    """Display cars"""
+    if request.method == "GET":
         db = db_connection()
         cars = db.execute("SELECT * FROM cars").fetchall()
+
         return render_template("cars.html", cars=cars)
 
+    else:
+        # return redirect("/cars/setups")
+        return render_template("setups.html")
 
-@app.route("/cars/setups", methods=["GET", "POST"])
-def show_car_locations():
+
+@app.route("/cars/<model>", methods=["GET", "POST"])
+def show_car_locations(model):
+    """Display car's location that was clicked"""
     if request.method == "POST":
+        # Get car's id from the car card
+        # that was clicked
         car_id = request.form.get("car_id")
 
         db = db_connection()
-        # Get car brand and model
+        # Get car's data for current car
         car = db.execute("SELECT * FROM cars WHERE id=?", car_id).fetchone()
-        # Use fetchone() to manipulate the object returned from query above
-        # car = db.fetchall() //no use
-
-        print(car["brand"])
 
         # Get available locations for current car
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
@@ -95,13 +81,33 @@ def show_car_locations():
         return render_template ("setups.html", car_locations=car_locations, car=car)
 
     else:
+        # When user reach route via GET (as by clicking a link or via redirect)
+        # define the current car from the link by getting the model from url
         db = db_connection()
-        cars = db.execute("SELECT * FROM cars")
-        return render_template("cars.html", cars=cars)
+
+        # Check the model exists in the database
+        try:
+            car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
+
+            # Get car's id to use while queriing the location table
+            car_id = car['id']
+        except:
+            # If model from the url doesn't exist in the dabase
+            # then display flash message
+            # and display the apology page
+            flash("There's no such car you are looking for!")
+            return redirect("/apology")
+
+        # Get locations that are available for the current car
+        # which will be displayed to the user
+        # by using the car_id
+        car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
+
+        return render_template("setups.html", car=car, model=model, car_locations=car_locations)
 
 
-@app.route("/cars/setups/setup", methods=["GET", "POST"])
-def show_setup():
+@app.route("/cars/<model>/<location>", methods=["GET", "POST"])
+def show_setup(model, location):
     """Show setup"""
     if request.method == "POST":
         location_id = request.form.get("location_id")
@@ -117,7 +123,26 @@ def show_setup():
         return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
 
     else:
-        return render_template("index.html")
+        db = db_connection()
+
+        # Check the model exists in the database
+        try:
+            car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
+            loc = db.execute("SELECT * FROM locations WHERE location_name=?", [location]).fetchone()
+            # Get car's id to use while queriing the location table
+            car_id = car['id']
+            location_id = loc["id"]
+            location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+        except:
+            # If model from the url doesn't exist in the dabase
+            # then display flash message
+            # and display the apology page
+            flash("There's no such location you are looking for!")
+            return redirect("/apology")
+
+        car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+
+        return render_template("car-setup.html", car=car, model=model, car_setups=car_setups, location=location)
 
 
 @app.route("/locations")
@@ -276,7 +301,9 @@ def reset():
         # print(f'\n\n{user_id}\n\n')
         # Updata password
         db.execute("UPDATE users SET hash=? WHERE id=?", [hash, user_id])
-        db.commit() # Commit changes
+
+        # Commit changes on database
+        db.commit() 
         db.close() # Close connection with database
         flash("Password was reset.")
 
