@@ -5,13 +5,17 @@
 {% endblock %}
 
 {% block main %}
-    {% if username %}
+    <div class="hero">
+        <div class="hero-bg">
+            <img src="{{ url_for('static', filename='/images/background/main-bg.jpg')}}" alt="main background">
 
-        <h1>Hi, {{ username }}!</h1>
-
-    {% else %}
-
-        <h1>Hi, guest!</h1>
-
-    {% endif %}
+            <div class="hero-title text-white">
+                <h1>RISE TO THE CHALLENGE</h1>
+                <p>DiRT Rally 2.0 dares you to carve your way through a selection of iconic rally locations from across the globe, in the most powerful off-road vehicles ever made, knowing that the smallest mistake could end your stage.</p>
+                <div class="welcome-title text-white">
+                    <h2>Welcome to the fan page of Dirt Rally 2.0</h2>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}

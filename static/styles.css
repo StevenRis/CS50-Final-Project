@@ -1,12 +1,59 @@
+html, body {
+    height: 100%;
+}
+
+.wrapper-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    background-color: #012639;
+}
+
+.main {
+    flex: 1 1 auto;
+}
+
 footer, div#content {
     display: none;
     }
+
 
 div#loading {
     position: absolute;
     z-index: 1000;
     cursor: wait;
     }
+
+#content {
+    margin-top: 60px;
+}
+
+.user {
+    display: flex;
+    align-items: center;
+}
+
+.hero-bg {
+    position: relative;
+    height: calc(100vh - 90px);
+    width: 100%;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+.hero-bg img {
+    width: 100%;
+    height: auto;
+}
+
+.hero-title {
+    position: absolute;
+    top: 0;
+    left: 72%;
+    transform: translate(-50%);
+    z-index: 2;
+    margin-top: 50px;
+}
 
 .setups_car-title > h1, h2 {
     display: inline-block;
