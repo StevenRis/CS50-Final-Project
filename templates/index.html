@@ -6,15 +6,11 @@
 
 {% block main %}
     <div class="hero">
-        <div class="hero-bg">
-            <img src="{{ url_for('static', filename='/images/background/main-bg.jpg')}}" alt="main background">
-
-            <div class="hero-title text-white">
-                <h1>RISE TO THE CHALLENGE</h1>
-                <p>DiRT Rally 2.0 dares you to carve your way through a selection of iconic rally locations from across the globe, in the most powerful off-road vehicles ever made, knowing that the smallest mistake could end your stage.</p>
-                <div class="welcome-title text-white">
-                    <h2>Welcome to the fan page of Dirt Rally 2.0</h2>
-                </div>
+        <div class="hero-title text-white">
+            <h1>RISE TO THE CHALLENGE</h1>
+            <p>Race_Place is a resource where you can find the best setup for your vehicle and experience it through a great selection of iconic rally locations from across the globe.</p>
+            <div>
+                <a href="{{ url_for('cars')}}" class="btn btn-danger">Choose your vehicle</a>
             </div>
         </div>
     </div>
