@@ -18,7 +18,6 @@ footer, div#content {
 
 .footer {
     background-color: #000000;
-    height: 7vh;
 }
 
 div#loading {
@@ -45,6 +44,12 @@ div#loading {
     position: relative;
     width: 100%;
     height: 94vh;
+}
+
+@media (max-width: 770px) {
+    .hero {
+        background-image: url(/static/images/background/main-mobile.jpg)
+    }
 }
 
 .hero-bg img {
@@ -87,5 +92,12 @@ div#loading {
 @media (max-width: 450px) {
     .flex-container {
         flex-wrap: wrap;
+    }
+
+    .hero-title {
+        top: 5%;
+        left: 50%;
+        margin-top: 10px;
+        width: 220px;
     }
 }
