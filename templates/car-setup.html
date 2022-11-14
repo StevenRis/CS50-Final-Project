@@ -298,6 +298,17 @@
                 </table>
             </div>
         </div>
+        <!-- add to favorite -->
+        {% if session["user_id"] %}
+        <form action="/cars/{{ car['model'] }}/{{ location['location_name'] }}" method="post">
+            <input name="setup_id" value="{{ setup['id'] }}" type="text" hidden>
+            <!-- <input name="locations_id" value="{{ setup['locations_id'] }}" type="text" hidden> -->
+
+            <button class="btn btn-outline-secondary btn-block car-setup mb-3" type="submit">Add to favorite &#9829</button>
+        </form>
+        {% else %}
+        {% endif %}
+
     </div>
     <hr>
 

@@ -43,10 +43,54 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
 def account():
-    username = define_user()
-    return render_template("account.html", username=username)
+
+    if request.method == "POST":
+        id = request.form.get("setup_id")
+        if id:
+            session["setup"].append(id)
+            return redirect("/account")
+    
+    else:
+        username = define_user()
+        user_id = session["user_id"]
+
+        # car = session["setup"]
+        # sql_list = str(tuple([key for key in car])).replace(',)', ')')
+        # print(sql_list)
+
+        # print(f'{username}')
+        # print(session["setup"])
+
+        # db = db_connection()
+        # cars = db.execute("SELECT * FROM setups WHERE id IN {sql_list}".format(sql_list=sql_list))
+
+        db = db_connection()
+        # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN (SELECT user_id from favorite_setups WHERE user_id=?)", [user_id])
+        # id_setup = db.execute("SELECT setup_id FROM favorite_setups WHERE user_id=?", [user_id]).fetchall()
+        # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT user_id FROM favorite_setups WHERE user_id=?)", [user_id]).fetchall()
+        # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT id FROM setups WHERE id=6)").fetchall()
+        # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT setup_id FROM favorite_setups WHERE user_id=?)", [user_id]).fetchall()
+        show_favorite_setups = db.execute("SELECT cars.brand, cars.model, locations.location_name, setups.cars_id, setups.locations_id FROM setups LEFT JOIN cars on cars.id=setups.cars_id LEFT JOIN locations ON locations.id=setups.locations_id INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT setup_id FROM favorite_setups WHERE user_id=13)")
+
+
+
+        # print(show_favorite_setups[0])
+        # for i in x:
+        #     print(f'SETUP ID - {i[4]}')
+
+
+
+        # car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+
+        # location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+
+        # car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+
+
+
+        return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
 
 
 @app.route("/cars", methods=["GET", "POST"])
@@ -61,6 +105,7 @@ def cars():
     else:
         # return redirect("/cars/setups")
         return render_template("setups.html")
+
 
 
 @app.route("/cars/<model>", methods=["GET", "POST"])
@@ -110,17 +155,36 @@ def show_car_locations(model):
 def show_setup(model, location):
     """Show setup"""
     if request.method == "POST":
-        location_id = request.form.get("location_id")
-        car_id = request.form.get("car_id")
+        setup_id = request.form.get("setup_id")
 
-        db = db_connection()
-        car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+        if setup_id:
+            user_id = session["user_id"]
+            print("INFO - setup id")
+            print(setup_id)
+            print("INFO - user id")
+            print(user_id)
 
-        location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+            db = db_connection()
+            # Add setup to favorite_setups table
+            db.execute("INSERT INTO favorite_setups (user_id, setup_id) VALUES (?, ?)", [user_id, setup_id])
+            db.commit()
+            print("INFO - setup added to DB")
 
-        car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+            flash ("Setup was added to favorites!")
+            return redirect(request.url)
 
-        return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
+        else:
+            location_id = request.form.get("location_id")
+            car_id = request.form.get("car_id")
+
+            db = db_connection()
+            car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+
+            location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+
+            car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+
+            return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
 
     else:
         db = db_connection()
