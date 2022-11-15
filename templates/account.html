@@ -15,33 +15,25 @@
                     <th class="text-center" colspan="100%">Favorite setups</th>
                 </tr>
             {% if session["user_id"] %}
-                {% for setup in setups %}
-                <tr class="table-light">
-                    <td class="text-start">IdOfSetup {{ setup["id"] }}</td>
-                    <td class="text-start">userId {{ setup["user_id"] }}</td>
-                    <td class="text-start">setup_Id {{ setup["setup_id"] }}</td>
-
-
-
-                    <td class="text-start">{{ setup["brand"] }} {{ setup["model"] }}</td>
-                    <td class="text-start">{{ setup["location_name"] }}</td>
-                    <td class="text-start">Tyres: {{ setup["tyres"] }}</td>
-                    <td class="text-start">Condition: {{ setup["conditions"] }}</td>
-                    <td class="text-start">Surface: {{ setup["surface"] }}</td>
-                    <!-- <th class="text-start">Vehicle</th> -->
-                    <!-- <td class="text-start">Vehcicle: {{ setup["car_image"] }}</td> -->
-                    <!-- <img src="/static/images/cars/2000cc/{{ setup['car_image'] }}" alt="{{ setup['car_image'] }}" style="width: 100%"> -->
-                    <!-- <td class="text-start">Location: {{ setup["locations_id"] }}</td> -->
-                    <!-- <td class="text-start">{{ setup["model"] }}</td> -->
-
-
-                </tr>
-                {% endfor %}
-            {% else %}
-                <tr class="table-light">
-                    <td class="text-center">No favorite setups yet!</td>
-                </tr>
+                {% if setups %}
+                    {% for setup in setups %}
+                    <tr class="table-light">
+                        <td class="text-start">userId {{ setup["user_id"] }}</td>
+                        <td class="text-start">setup_Id {{ setup["setup_id"] }}</td>
+                        <td class="text-start">{{ setup["brand"] }} {{ setup["model"] }}</td>
+                        <td class="text-start">{{ setup["location_name"] }}</td>
+                        <td class="text-start">Tyres: {{ setup["tyres"] }}</td>
+                        <td class="text-start">Condition: {{ setup["conditions"] }}</td>
+                        <td class="text-start">Surface: {{ setup["surface"] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr class="table-light">
+                        <td class="text-center">No favorite setups yet!</td>
+                    </tr>
+                {% endif %}
             {% endif %}
+
             </table>
         </div>
     </div>
