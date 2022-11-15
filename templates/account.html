@@ -16,16 +16,21 @@
                 </tr>
             {% if session["user_id"] %}
                 {% for setup in setups %}
-                <td class="table-light">
-                    <!-- <th class="text-start">Vehicle</th> -->
-                    <td class="text-start">Vehcicle: {{ setup["cars_id"] }}</td>
-                    <td class="text-start">Location: {{ setup["locations_id"] }}</td>
-                    <td class="text-start">Tyres: {{ setup["tyres"] }}</td>
-                    <td class="text-start">Conditions: {{ setup["conditions"] }}</td>
-                    <td class="text-start">Surface: {{ setup["surface"] }}</td>
+                <tr class="table-light">
+                    <td class="text-start">setupId {{ setup["setup_id"] }}</td>
+                    <td class="text-start">userId {{ setup["user_id"] }}</td>
+
+
+                    <td class="text-start">{{ setup["brand"] }} {{ setup["model"] }}</td>
                     <td class="text-start">{{ setup["location_name"] }}</td>
-                    <td class="text-start">{{ setup["brand"] }}</td>
-                    <td class="text-start">{{ setup["model"] }}</td>
+                    <td class="text-start">Tyres: {{ setup["tyres"] }}</td>
+                    <td class="text-start">Condition: {{ setup["conditions"] }}</td>
+                    <td class="text-start">Surface: {{ setup["surface"] }}</td>
+                    <!-- <th class="text-start">Vehicle</th> -->
+                    <!-- <td class="text-start">Vehcicle: {{ setup["car_image"] }}</td> -->
+                    <!-- <img src="/static/images/cars/2000cc/{{ setup['car_image'] }}" alt="{{ setup['car_image'] }}" style="width: 100%"> -->
+                    <!-- <td class="text-start">Location: {{ setup["locations_id"] }}</td> -->
+                    <!-- <td class="text-start">{{ setup["model"] }}</td> -->
 
 
                 </tr>
