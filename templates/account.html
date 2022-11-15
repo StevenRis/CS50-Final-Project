@@ -17,8 +17,10 @@
             {% if session["user_id"] %}
                 {% for setup in setups %}
                 <tr class="table-light">
-                    <td class="text-start">setupId {{ setup["setup_id"] }}</td>
+                    <td class="text-start">IdOfSetup {{ setup["id"] }}</td>
                     <td class="text-start">userId {{ setup["user_id"] }}</td>
+                    <td class="text-start">setup_Id {{ setup["setup_id"] }}</td>
+
 
 
                     <td class="text-start">{{ setup["brand"] }} {{ setup["model"] }}</td>

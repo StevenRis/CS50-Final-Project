@@ -49,22 +49,17 @@ def home():
 @login_required
 def account():
 
-    if request.method == "POST":
-        id = request.form.get("setup_id")
-        if id:
-            session["setup"].append(id)
-            return redirect("/account")
-    
-    else:
+    if request.method == "GET":
+
         username = define_user()
         user_id = session["user_id"]
-        # print("The variable, name is of type:", type(user_id))
+        print(type(user_id))
 
         db = db_connection()
-        show_favorite_setups = db.execute("SELECT * FROM setups LEFT JOIN cars on cars.id=setups.cars_id LEFT JOIN locations ON locations.id=setups.locations_id INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT setup_id FROM favorite_setups WHERE user_id=?)", [user_id])
-
-        return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
-
+        # show_favorite_setups = db.execute("SELECT * FROM setups inner JOIN cars on cars.id=setups.cars_id inner JOIN locations ON locations.id=setups.locations_id INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT setup_id FROM favorite_setups WHERE user_id=?)", [user_id])
+        show_favorite_setups = db.execute("SELECT user_id, setup_id, surface, tyres, conditions FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id INNER JOIN users ON users.id=favorite_setups.user_id WHERE user_id IN (SELECT id FROM users WHERE id=?)", [user_id]).fetchall()
+        # show_favorite_setups = db.execute("select setup_id from favorite_setups where user_id=?", [user_id]).fetchall()
+        print(show_favorite_setups)
 
         # car = session["setup"]
         # sql_list = str(tuple([key for key in car])).replace(',)', ')')
@@ -78,9 +73,10 @@ def account():
 
         # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN (SELECT user_id from favorite_setups WHERE user_id=?)", [user_id])
         # id_setup = db.execute("SELECT setup_id FROM favorite_setups WHERE user_id=?", [user_id]).fetchall()
-        # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT user_id FROM favorite_setups WHERE user_id=?)", [user_id]).fetchall()
+        # show_favorite_setups = db.execute("SELECT setups.id FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT setup_id FROM favorite_setups WHERE user_id=?)", [user_id]).fetchall()
         # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT id FROM setups WHERE id=6)").fetchall()
         # show_favorite_setups = db.execute("SELECT * FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id WHERE favorite_setups.setup_id IN (SELECT setup_id FROM favorite_setups WHERE user_id=?)", [user_id]).fetchall()
+
 
 
 
@@ -95,9 +91,7 @@ def account():
         # location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
 
         # car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
-
-
-
+        return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
 
 
 @app.route("/cars", methods=["GET", "POST"])
@@ -172,7 +166,8 @@ def show_setup(model, location):
             # check if the user already has this setup
             # Get the user id from favorite_setups table
             db = db_connection()
-            user = db.execute("SELECT user_id FROM favorite_setups WHERE setup_id=?", [user_id]).fetchone()
+            user = db.execute("SELECT user_id FROM favorite_setups WHERE user_id=?", [user_id]).fetchone()
+            # print(user[0])
 
             # Check if the user has this setup, he wants to add
             # display a message "You already have this setup in the favorites!"
@@ -189,7 +184,14 @@ def show_setup(model, location):
                     flash ("Setup was succesfully added to favorites!")
                     db.close()
                     return redirect(request.url)
+
+            if not user:
+                db.execute("INSERT INTO favorite_setups (user_id, setup_id) VALUES (?, ?)", [user_id, setup_id])
+                db.commit()
+                flash ("Setup was succesfully added to favorites!")
+                db.close()
             return redirect(request.url)
+            # return redirect(request.url)
 
         else:
             location_id = request.form.get("location_id")
