@@ -307,7 +307,6 @@ def reset():
         db.close() # Close connection with database
         flash("Password was reset.")
 
-
         return redirect('/')
 
 # enable debug mode - no need to restart the server to refresh the page

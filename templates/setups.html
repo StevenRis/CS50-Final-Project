@@ -5,11 +5,11 @@
 {% endblock %}
 
 {% block main %}
-    <div class="setups_car-title">
+    <div class="setups_car-title text-center pt-5">
         <h1>{{ car['brand'] }} {{ car['model'] }}</h1>
         <h3>Class: {{ car['class'] }}</h3>
     </div>
-    <div class="container-fluid mt-3">
+    <div class="container-fluid mt-3 text-center">
         <h2 class="mb-2">Locations</h2>
         <div class="container-xl d-flex flex-wrap justify-content-center">
             {% for car_location in car_locations %}
