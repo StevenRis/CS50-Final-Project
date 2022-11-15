@@ -7,8 +7,34 @@
 {% block main %}
     <div class="container">
         <div class="user-data pt-5">
-            <h1>Hello {{ username }}!</h1>
-            <p>Welcome to your account.</p>
+            <h1>Hello, {{ username }}!</h1>
+        </div>
+        <div class="container-fluid mt-3">
+            <table class="table table-sm table-boardered table-striped shadow p-4 mb-4 bg-white ">
+                <tr class="table-dark">
+                    <th class="text-center" colspan="100%">Favorite setups</th>
+                </tr>
+            {% if session["user_id"] %}
+                {% if setups %}
+                    {% for setup in setups %}
+                    <tr class="table-light">
+                        <td class="text-start">userId {{ setup["user_id"] }}</td>
+                        <td class="text-start">setup_Id {{ setup["setup_id"] }}</td>
+                        <td class="text-start">{{ setup["brand"] }} {{ setup["model"] }}</td>
+                        <td class="text-start">{{ setup["location_name"] }}</td>
+                        <td class="text-start">Tyres: {{ setup["tyres"] }}</td>
+                        <td class="text-start">Condition: {{ setup["conditions"] }}</td>
+                        <td class="text-start">Surface: {{ setup["surface"] }}</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr class="table-light">
+                        <td class="text-center">No favorite setups yet!</td>
+                    </tr>
+                {% endif %}
+            {% endif %}
+
+            </table>
         </div>
     </div>
 {% endblock %}

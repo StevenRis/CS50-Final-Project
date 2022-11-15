@@ -88,18 +88,22 @@
           </div>
         </nav>
 
-        {% if get_flashed_messages() %}
-        <div class="alert alert-primary mb-0 text-center" role="alert">
-          {{ get_flashed_messages() | join(" ") }}
-        </div>
-        {% endif %}
       </header>
+
 
       <main class="main">
         <div id="loading" class="container-fluid">
           <div class="spinner-border"></div>
         </div>
-        <div id="content">{% block main %}{% endblock %}</div>
+        <div id="content">
+          {% if get_flashed_messages() %}
+          <div class="alert alert-primary mb-0 text-center flash-message" role="alert">
+            {{ get_flashed_messages() | join(" ") }}
+          </div>
+          {% endif %}
+
+          {% block main %}{% endblock %}
+        </div>
       </main>
 
       <footer class="footer small text-muted">

@@ -1,9 +1,10 @@
-from flask import Flask, render_template, redirect, request, session, flash, url_for
-from flask_session import Session
-from tempfile import mkdtemp
-from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
+from tempfile import mkdtemp
 
+from flask import (Flask, flash, redirect, render_template, request, session, url_for)
+from werkzeug.security import check_password_hash, generate_password_hash
+
+from flask_session import Session
 from helpers import login_required
 
 app = Flask(__name__)
@@ -43,24 +44,30 @@ def home():
     return render_template("index.html")
 
 
-@app.route("/account")
+@app.route("/account", methods=["GET", "POST"])
+@login_required
 def account():
-    username = define_user()
-    return render_template("account.html", username=username)
+
+    if request.method == "GET":
+
+        username = define_user()
+        user_id = session["user_id"]
+
+        db = db_connection()
+
+        show_favorite_setups = db.execute("SELECT user_id, setup_id, surface, tyres, conditions, brand, model, location_name FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id INNER JOIN cars ON cars.id=setups.cars_id INNER JOIN locations ON locations.id=setups.locations_id INNER JOIN users ON users.id=favorite_setups.user_id WHERE user_id IN (SELECT id FROM users WHERE id=?)", [user_id]).fetchall()
+
+        return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
 
 
-@app.route("/cars", methods=["GET", "POST"])
+@app.route("/cars")
 def cars():
     """Display cars"""
-    if request.method == "GET":
-        db = db_connection()
-        cars = db.execute("SELECT * FROM cars").fetchall()
 
-        return render_template("cars.html", cars=cars)
+    db = db_connection()
+    cars = db.execute("SELECT * FROM cars").fetchall()
 
-    else:
-        # return redirect("/cars/setups")
-        return render_template("setups.html")
+    return render_template("cars.html", cars=cars)
 
 
 @app.route("/cars/<model>", methods=["GET", "POST"])
@@ -89,7 +96,7 @@ def show_car_locations(model):
         try:
             car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
 
-            # Get car's id to use while queriing the location table
+            # Get car's id to use while quering the location table
             car_id = car['id']
         except:
             # If model from the url doesn't exist in the dabase
@@ -110,21 +117,52 @@ def show_car_locations(model):
 def show_setup(model, location):
     """Show setup"""
     if request.method == "POST":
-        location_id = request.form.get("location_id")
-        car_id = request.form.get("car_id")
 
-        db = db_connection()
-        car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+        # Get the setup id when the user adds the setup to favorites
+        setup_id = request.form.get("setup_id")
+        if setup_id:
+            # Define current user id
+            user_id = session["user_id"]
 
-        location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+            # Before adding the setup to favorite_setups table
+            # check if the user already has this setup in favorites
+            # Get the user_id and setup_id from favorite_setups table
+            db = db_connection()
+            user = db.execute("SELECT user_id FROM favorite_setups WHERE user_id=?", [user_id]).fetchone()
+            setup = db.execute("SELECT setup_id FROM favorite_setups WHERE setup_id=?", [setup_id]).fetchone()
 
-        car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+            # In order to avoid duplication check the user has this setup, he wants to add
+            # If the user doesn't have the setup
+            # insert this setup to favorite_setups table
+            # and display the message "Setup was successfully added to favorites!"
+            if not user and not setup:
+                db.execute("INSERT INTO favorite_setups (user_id, setup_id) VALUES (?, ?)", [user_id, setup_id])
+                db.commit()
+                flash ("Setup was successfully added to favorites!")
+                db.close()
+                return redirect(request.url)
+            else:
+            # if has - display the message "You already have this setup in the favorites!"
+                flash ("You already have this setup in the favorites!")
 
-        return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
+            return redirect(request.url)
+
+        else:
+            # Method GET
+            location_id = request.form.get("location_id")
+            car_id = request.form.get("car_id")
+
+            db = db_connection()
+            car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+
+            location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+
+            car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? and locations_id=?", [car_id, location_id])
+
+            return render_template("car-setup.html", car_setups=car_setups, location=location, car=car)
 
     else:
         db = db_connection()
-
         # Check the model exists in the database
         try:
             car = db.execute("SELECT * FROM cars WHERE model=?", [model]).fetchone()
@@ -182,9 +220,8 @@ def register():
             flash("Passwords are not the same")
             return redirect ('/apology')
 
-        db = db_connection()
-
         # Add user and password to database
+        db = db_connection()
         try:
             db.execute("INSERT INTO users (username, hash) VALUES (?, ?)", [username, hash])
             db.commit()
@@ -313,3 +350,4 @@ def reset():
 # python app.py - run the server
 if __name__ == '__main__':
     app.run(debug=True)
+    # app.run(host="0.0.0.0", port=5000, debug=True)

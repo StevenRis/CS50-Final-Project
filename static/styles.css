@@ -1,6 +1,11 @@
 html, body {
     height: 100%;
 }
+/* 
+.flash-message {
+    position: absolute;
+    top: 50px;
+} */
 
 .wrapper-container {
     display: flex;

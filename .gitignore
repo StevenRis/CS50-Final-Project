@@ -2,3 +2,4 @@
 __pycache__/
 .venv/
 __flask_session__/
+flask_session/
