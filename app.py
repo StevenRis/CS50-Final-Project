@@ -277,6 +277,8 @@ def login():
         # Remember which user has logged in
         session["user_id"] = users[0]["id"]
 
+        flash("You've been successfully logged in!")
+
         # Redirect user to home page
         return redirect("/")
 
@@ -288,6 +290,8 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
+    flash("You've been logged out!")
+
     return redirect('/')
 
 
