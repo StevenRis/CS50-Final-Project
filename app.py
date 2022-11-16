@@ -59,6 +59,38 @@ def account():
 
         return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
 
+    else:
+
+        return redirect("/account")
+
+
+@app.route("/account/favorite_setup/<model>/<location>", methods=["GET", "POST"])
+@login_required
+def show_fav_setups(model, location):
+    if request.method == "POST":
+        model = request.form.get("model")
+        location_name = request.form.get("location_name")
+        setup_id = request.form.get("setup_id")
+
+
+        db = db_connection()
+        car_id = db.execute("SELECT id FROM cars WHERE model=?", [model]).fetchone()[0]
+        location_id = db.execute("SELECT id FROM locations WHERE location_name=?", [location_name]).fetchone()[0]
+
+        car = db.execute("SELECT brand, model, class FROM cars INNER JOIN setups ON cars.id=setups.cars_id WHERE setups.cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id]).fetchone()
+
+        location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
+
+        # car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? AND locations_id=?", [car_id, location_id])
+        car_setups = db.execute("SELECT * FROM setups WHERE id=?", [setup_id])
+
+
+        return render_template("car-setup.html", model=model, car_setups=car_setups, location=location, car=car)
+
+    else:
+        return redirect("/account")
+
+
 
 @app.route("/cars")
 def cars():

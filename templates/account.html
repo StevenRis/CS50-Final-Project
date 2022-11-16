@@ -18,13 +18,19 @@
                 {% if setups %}
                     {% for setup in setups %}
                     <tr class="table-light">
-                        <!-- <td class="text-start">userId {{ setup["user_id"] }}</td> -->
-                        <!-- <td class="text-start">setup_Id {{ setup["setup_id"] }}</td> -->
-                        <td class="text-start">{{ setup["brand"] }} {{ setup["model"] }}</td>
-                        <td class="text-start">{{ setup["location_name"] }}</td>
-                        <td class="text-start">Tyres: {{ setup["tyres"] }}</td>
-                        <td class="text-start">Condition: {{ setup["conditions"] }}</td>
-                        <td class="text-start">Surface: {{ setup["surface"] }}</td>
+                        <td class="text-start account-setups-td">{{ setup["brand"] }} {{ setup["model"] }}</td>
+                        <td class="text-start account-setups-td">{{ setup["location_name"] }}</td>
+                        <td class="text-start account-setups-td">Tyres: {{ setup["tyres"] }}</td>
+                        <td class="text-start account-setups-td">Condition: {{ setup["conditions"] }}</td>
+                        <td class="text-start account-setups-td">Surface: {{ setup["surface"] }}</td>
+                        <td>
+                            <form action="/account/favorite_setup/{{ setup['model'] }}/{{ setup['location_name'] }}" method="post">
+                                <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
+                                <input name="model" value="{{ setup['model'] }}" type="text" hidden>
+                                <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
+                                <button class="btn btn-danger" type="submit">Show setup</button>
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}
