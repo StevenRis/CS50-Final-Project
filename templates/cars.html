@@ -9,7 +9,7 @@
         <h2 class="mb-2">Vehicles</h2>
         <div class="container-xl d-flex flex-wrap justify-content-center">
             {% for car in cars %}
-            <div class="card m-3 bg-dark text-white" style="width:400px">
+            <div class="card m-3 bg-dark text-white shadow" style="width:400px">
                 <img class="card-img-top" src="/static/images/cars/2000cc/{{ car['car_image'] }}" alt="Car image" style="width:100%">
                 <div class="card-body">
                     <h4 class="card-title mb-3">{{ car['brand'] }} {{ car['model'] }}</h4>
