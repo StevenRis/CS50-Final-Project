@@ -1,11 +1,6 @@
 html, body {
     height: 100%;
 }
-/* 
-.flash-message {
-    position: absolute;
-    top: 50px;
-} */
 
 .wrapper-container {
     display: flex;
@@ -105,4 +100,42 @@ div#loading {
         margin-top: 10px;
         width: 220px;
     }
+}
+
+/*  */
+.goTopButton {
+    display: none; /* Hidden by default */
+    position: fixed; /* Fixed/sticky position */
+    bottom: 20px; /* Place the button at the bottom of the page */
+    right: 30px; /* Place the button 30px from the right */
+    z-index: 99; /* Make sure it does not overlap */
+    border: none; /* Remove borders */
+    outline: none; /* Remove outline */
+    /* background-color: hsla(0, 0%, 0%, 0.065); Set a background color */
+    color: white; /* Text color */
+    cursor: pointer; /* Add a mouse pointer on hover */
+    padding: 15px; /* Some padding */
+    border-radius: 10px; /* Rounded corners */
+    font-size: 18px; /* Increase font size */
+}
+
+.bar1, .bar2 {
+    width: 20px;
+    height: 2px;
+    margin: 3px 0 0 -4px;
+    transition: 0.7s;
+    background-color: #000000;
+    border-radius: 1rem
+}
+
+.bar1 {
+    transform: rotate(128deg) translate(3px, 3px);
+}
+
+.bar2{
+    transform: rotate(45deg) translate(2px, -9px);
+}
+
+.goTopButton:hover {
+    background-color: rgba(0, 0, 0, 0.223); /* Add a dark-red background on hover */
 }
