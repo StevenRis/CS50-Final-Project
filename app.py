@@ -137,6 +137,7 @@ def show_car_locations(model):
             flash("There's no such car you are looking for!")
             return redirect("/apology")
 
+
         # Get locations that are available for the current car
         # which will be displayed to the user
         # by using the car_id
@@ -396,9 +397,8 @@ def login():
 @app.route("/logout")
 def logout():
     session.clear()
-    flash("You were logged out!")
 
-    return redirect('/')
+    return redirect(url_for("login"))
 
 
 @app.route("/about")
@@ -451,7 +451,7 @@ def reset():
 
         # Commit changes on database
         db.commit() 
-        db.close() # Close connection with database
+        db.close() # Close connection to database
         flash("Password was reset.")
 
         return redirect('/')

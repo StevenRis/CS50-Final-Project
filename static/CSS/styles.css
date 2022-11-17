@@ -38,7 +38,6 @@ div#loading {
     align-items: center;
 }
 
-
 .hero {
     background-image: url(/static/images/background/main-bg.jpg);
     background-color: #000000;
@@ -110,6 +109,14 @@ div#loading {
     }
 }
 
+.apology {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .goTopButton {
     display: none;
     position: fixed;
@@ -118,7 +125,20 @@ div#loading {
     z-index: 99;
     cursor: pointer;
     padding: 15px;
+    background-color: #ff0505;
     border-radius: 10px;
+}
+
+@media(min-width: 280px) {
+    .goTopButton {
+    right: 6px;
+    }
+}
+
+@media(min-width: 768px) {
+    .goTopButton {
+    right: 25px;
+    }
 }
 
 .bar1, .bar2 {
