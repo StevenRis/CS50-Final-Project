@@ -156,28 +156,101 @@ def show_setup(model, location):
             # Define current user id
             user_id = session["user_id"]
 
+            u = 13
+            s = 5
+
             # Before adding the setup to favorite_setups table
             # check if the user already has this setup in favorites
             # Get the user_id and setup_id from favorite_setups table
             db = db_connection()
-            user = db.execute("SELECT user_id FROM favorite_setups WHERE user_id=?", [user_id]).fetchone()
-            setup = db.execute("SELECT setup_id FROM favorite_setups WHERE setup_id=?", [setup_id]).fetchone()
+            # user = db.execute("SELECT user_id FROM favorite_setups").fetchall()
+            # user = db.execute("SELECT EXISTS (SELECT 1 FROM favorite_setups WHERE user_id=?)", [u]).fetchone()[0]
+            # user = db.execute("SELECT 1 FROM favorite_setups WHERE user_id=?", [u]).fetchone()[0]
+
+
+            # setup = db.execute("SELECT setup_id FROM favorite_setups").fetchall()
+            # setup = db.execute("SELECT EXISTS (SELECT 1 FROM favorite_setups WHERE setup_id=?)", [s]).fetchone()[0]
+
+            exists = db.execute("SELECT EXISTS (SELECT 1 FROM favorite_setups WHERE user_id=? and setup_id=?)", [user_id, setup_id]).fetchone()[0]
+            print(exists)
+
+            if exists == 0:
+                db.execute("INSERT INTO favorite_setups (user_id, setup_id) VALUES (?, ?)", [user_id, setup_id])
+                db.commit()
+                flash('Setup was added')
+
+            else:
+                print('exists')
+                flash('You already have this setup in favorites')
+
+            # print(user)
+            # print(setup)
+            # if user == 1 and setup == 1:
+            #     print('user and setup found')
+            # else:
+            #     print('add user')
+            
+            # if user == 1 and setup == 0:
+            #     print('user found, setup not found')
+
+
+
+            # for row in user:
+            #     print(row[0])
+            #     if u in row:
+            #         print('found')
+            #     else:
+            #         print('not found')
+                
+
+            # if u in user:
+            #     print('u FOUND')
+
+            #     if s in setup:
+            #         print('s FOUND')
+            #     else:
+            #         print('not found')
+
+            # u = user["user_id"]
+
+            # print(user)
+
+            # for x in users:
+            #     print(x[0])
+
+            #     if u in users:
+            #         print("user found")
+
+            #     else:
+            #         print("not found")
+
+            # if s in setups:
+            #     print("setup found")
+
+            return redirect(request.url)
 
             # In order to avoid duplication check the user has this setup, he wants to add
             # If the user doesn't have the setup
             # insert this setup to favorite_setups table
             # and display the message "Setup was successfully added to favorites!"
-            if not user and not setup:
-                db.execute("INSERT INTO favorite_setups (user_id, setup_id) VALUES (?, ?)", [user_id, setup_id])
-                db.commit()
-                flash ("Setup was successfully added to favorites!")
-                db.close()
-                return redirect(request.url)
-            else:
-            # if has - display the message "You already have this setup in the favorites!"
-                flash ("You already have this setup in the favorites!")
+            # if not user_id in users:
+                # db.execute("INSERT INTO favorite_setups (user_id) VALUES (?)", [user_id])
+                # db.commit()
+                # print("user inserted")
 
-            return redirect(request.url)
+
+                # if not setup_id in setups:
+                    # db.execute("INSERT INTO favorite_setups (setup_id) VALUES (?)", [setup_id])
+                    # db.commit()
+
+                    # flash ("Setup was successfully added to favorites!")
+                    # db.close()
+                    # return redirect(request.url)
+            # else:
+            # if has - display the message "You already have this setup in the favorites!"
+                # flash ("You already have this setup in the favorites!")
+
+            # return redirect(request.url)
 
         else:
             # Method GET
@@ -269,6 +342,7 @@ def register():
         # Remeber new user in session
         session["user_id"] = new_user["id"]
 
+        flash(f"Hi {username}! You were successfully registered!")
         return redirect("/")
 
     else:
