@@ -1,0 +1,24 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Sign in
+{% endblock %}
+
+{% block main %}
+<div class="container mt-3 text-center">
+    <div class="mt-5 pt-5">
+        <h1>Sign in to Race_Place</h1>
+    </div>
+    <form action="/login" method="post">
+        <div class="mb-3">
+            <label for="username">Username:</label>
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" type="text" required>
+        </div>
+        <div class="mb-3">
+            <label  for="password">Password:</label>
+            <input class="form-control mx-auto w-auto" id="password" name="password" type="password" required><a class="mb-3" href="/password_reset">Forgot password?</a>
+        </div>
+        <button class="btn btn-primary" type="submit">Sign In</button>
+    </form>
+</div>
+{% endblock %}
