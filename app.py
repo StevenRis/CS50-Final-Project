@@ -57,12 +57,25 @@ def account():
 
         show_favorite_setups = db.execute("SELECT user_id, setup_id, surface, tyres, conditions, brand, model, location_name FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id INNER JOIN cars ON cars.id=setups.cars_id INNER JOIN locations ON locations.id=setups.locations_id INNER JOIN users ON users.id=favorite_setups.user_id WHERE user_id IN (SELECT id FROM users WHERE id=?)", [user_id]).fetchall()
 
-        return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
+        return render_template("account.html", user_id=user_id, username=username, cars=cars, setups=show_favorite_setups)
 
     else:
-        
+        # POST
+        # Get user_id and setup_id
+        user_id = request.form.get("user_id")
+        setup_id = request.form.get("setup_id")
 
-        return redirect("/account")
+        # Init db connection
+        db = db_connection()
+
+        # Select user_id and setup_id from favorite_setups table
+        # which setup to delete when user click delete button
+        # DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
+        db.execute("DELETE FROM favorite_setups WHERE user_id=? AND setup_id=?", [user_id, setup_id])
+        db.commit()
+        flash("Setup was deleted.")
+
+        return redirect(request.url)
 
 
 @app.route("/account/favorite_setup/<model>/<location>", methods=["GET", "POST"])
