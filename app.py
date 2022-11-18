@@ -73,9 +73,9 @@ def account():
         # DELETE FROM Customers WHERE CustomerName='Alfreds Futterkiste';
         db.execute("DELETE FROM favorite_setups WHERE user_id=? AND setup_id=?", [user_id, setup_id])
         db.commit()
-        flash("Setup was deleted.")
+        flash("Setup was successfully deleted.")
 
-        return redirect(request.url)
+        return redirect(url_for('account'))
 
 
 @app.route("/account/favorite_setup/<model>/<location>", methods=["GET", "POST"])
