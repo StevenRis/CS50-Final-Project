@@ -26,27 +26,27 @@
                         {% if setup["conditions"] == "Dry" %}
                         <td class="table-warning text-start account-setups-td">Condition: {{ setup["conditions"] }}</td>
                         <td class="text-start account-setups-td">Surface: {{ setup["surface"] }}</td>
-                        <td>
-                            <form action="/account/favorite_setup/{{ setup['model'] }}/{{ setup['location_name'] }}" method="post">
-                                <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
-                                <input name="model" value="{{ setup['model'] }}" type="text" hidden>
-                                <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
-                                <button class="btn btn-danger" type="submit">Show setup</button>
-                            </form>
-                        </td>
                         {% endif %}
                         {% if setup["conditions"] == "Wet" %}
                         <td class="table-primary text-start account-setups-td">Condition: {{ setup["conditions"] }}</td>
                         <td class="text-start account-setups-td">Surface: {{ setup["surface"] }}</td>
+                        {% endif %}
                         <td>
                             <form action="/account/favorite_setup/{{ setup['model'] }}/{{ setup['location_name'] }}" method="post">
                                 <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
                                 <input name="model" value="{{ setup['model'] }}" type="text" hidden>
                                 <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
-                                <button class="btn btn-danger" type="submit">Show setup</button>
+                                <button class="btn btn-success" type="submit"><img src="{{ url_for('static', filename='/icons/view.png') }}" alt="delete-setup" width="20px"></button>
                             </form>
                         </td>
-                        {% endif %}
+                        <td>
+                            <form action="/account" method="post">
+                                <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
+                                <input name="model" value="{{ setup['model'] }}" type="text" hidden>
+                                <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
+                                <button class="btn btn-danger" type="submit"><img src="{{ url_for('static', filename='/icons/delete.png') }}" alt="delete-setup" width="20px"></button>
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
                 {% else %}

@@ -60,6 +60,7 @@ def account():
         return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
 
     else:
+        
 
         return redirect("/account")
 
