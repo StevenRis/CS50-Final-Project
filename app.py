@@ -23,6 +23,7 @@ def db_connection():
     connection.row_factory = sqlite3.Row
     return connection
 
+
 # Define current user from session
 def define_user():
     user_id = session["user_id"]
@@ -47,7 +48,6 @@ def home():
 @app.route("/account", methods=["GET", "POST"])
 @login_required
 def account():
-
     if request.method == "GET":
 
         username = define_user()
@@ -55,23 +55,38 @@ def account():
 
         db = db_connection()
 
-        show_favorite_setups = db.execute("SELECT user_id, setup_id, surface, tyres, conditions, brand, model, location_name FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id INNER JOIN cars ON cars.id=setups.cars_id INNER JOIN locations ON locations.id=setups.locations_id INNER JOIN users ON users.id=favorite_setups.user_id WHERE user_id IN (SELECT id FROM users WHERE id=?)", [user_id]).fetchall()
+        show_favorite_setups = db.execute("SELECT user_id, setup_id, surface, tyres, conditions, brand, model, car_image, location_name, location_image FROM setups INNER JOIN favorite_setups ON setups.id=favorite_setups.setup_id INNER JOIN cars ON cars.id=setups.cars_id INNER JOIN locations ON locations.id=setups.locations_id INNER JOIN users ON users.id=favorite_setups.user_id WHERE user_id IN (SELECT id FROM users WHERE id=?)", [user_id]).fetchall()
 
-        return render_template("account.html", username=username, cars=cars, setups=show_favorite_setups)
+        return render_template("account.html", user_id=user_id, username=username, cars=cars, setups=show_favorite_setups)
 
     else:
+        # POST
+        # Get user_id and setup_id
+        user_id = request.form.get("user_id")
+        setup_id = request.form.get("setup_id")
 
-        return redirect("/account")
+        # Init db connection
+        db = db_connection()
+
+        # Select user_id and setup_id from favorite_setups table
+        # which setup to delete when user click delete button
+        db.execute("DELETE FROM favorite_setups WHERE user_id=? AND setup_id=?", [user_id, setup_id])
+        db.commit()
+        flash("Setup was successfully deleted.")
+
+        return redirect(url_for('account'))
 
 
 @app.route("/account/favorite_setup/<model>/<location>", methods=["GET", "POST"])
 @login_required
 def show_fav_setups(model, location):
+    """Display user's favorite setups"""
+
+    # Display car setup when user clicks show button
     if request.method == "POST":
         model = request.form.get("model")
         location_name = request.form.get("location_name")
         setup_id = request.form.get("setup_id")
-
 
         db = db_connection()
         car_id = db.execute("SELECT id FROM cars WHERE model=?", [model]).fetchone()[0]
@@ -81,13 +96,12 @@ def show_fav_setups(model, location):
 
         location = db.execute("SELECT location_name FROM locations INNER JOIN setups ON locations.id=setups.locations_id WHERE setups.locations_id IN (SELECT id FROM locations WHERE id=?)", [location_id]).fetchone()
 
-        # car_setups = db.execute("SELECT * FROM setups WHERE cars_id=? AND locations_id=?", [car_id, location_id])
         car_setups = db.execute("SELECT * FROM setups WHERE id=?", [setup_id])
-
 
         return render_template("car-setup.html", model=model, car_setups=car_setups, location=location, car=car)
 
     else:
+        # Get
         return redirect("/account")
 
 
@@ -95,7 +109,6 @@ def show_fav_setups(model, location):
 @app.route("/cars")
 def cars():
     """Display cars"""
-
     db = db_connection()
     cars = db.execute("SELECT * FROM cars").fetchall()
 
@@ -104,7 +117,7 @@ def cars():
 
 @app.route("/cars/<model>", methods=["GET", "POST"])
 def show_car_locations(model):
-    """Display car's location that was clicked"""
+    """Display car's location that user clicked"""
     if request.method == "POST":
         # Get car's id from the car card
         # that was clicked
@@ -157,104 +170,30 @@ def show_setup(model, location):
             # Define current user id
             user_id = session["user_id"]
 
-            u = 13
-            s = 5
-
             # Before adding the setup to favorite_setups table
             # check if the user already has this setup in favorites
             # Get the user_id and setup_id from favorite_setups table
             db = db_connection()
-            # user = db.execute("SELECT user_id FROM favorite_setups").fetchall()
-            # user = db.execute("SELECT EXISTS (SELECT 1 FROM favorite_setups WHERE user_id=?)", [u]).fetchone()[0]
-            # user = db.execute("SELECT 1 FROM favorite_setups WHERE user_id=?", [u]).fetchone()[0]
-
-
-            # setup = db.execute("SELECT setup_id FROM favorite_setups").fetchall()
-            # setup = db.execute("SELECT EXISTS (SELECT 1 FROM favorite_setups WHERE setup_id=?)", [s]).fetchone()[0]
-
             exists = db.execute("SELECT EXISTS (SELECT 1 FROM favorite_setups WHERE user_id=? and setup_id=?)", [user_id, setup_id]).fetchone()[0]
-            print(exists)
 
+            # In order to avoid duplication check the user has this setup, he wants to add
+            # If the user doesn't have the setup
+            # insert this setup to favorite_setups table
+            # and display the message "Setup was successfully added to favorites!"
             if exists == 0:
                 db.execute("INSERT INTO favorite_setups (user_id, setup_id) VALUES (?, ?)", [user_id, setup_id])
                 db.commit()
                 flash('Setup was added')
 
             else:
-                print('exists')
+                # if has - display the message "You already have this setup in the favorites!"
                 flash('You already have this setup in favorites')
-
-            # print(user)
-            # print(setup)
-            # if user == 1 and setup == 1:
-            #     print('user and setup found')
-            # else:
-            #     print('add user')
-            
-            # if user == 1 and setup == 0:
-            #     print('user found, setup not found')
-
-
-
-            # for row in user:
-            #     print(row[0])
-            #     if u in row:
-            #         print('found')
-            #     else:
-            #         print('not found')
-                
-
-            # if u in user:
-            #     print('u FOUND')
-
-            #     if s in setup:
-            #         print('s FOUND')
-            #     else:
-            #         print('not found')
-
-            # u = user["user_id"]
-
-            # print(user)
-
-            # for x in users:
-            #     print(x[0])
-
-            #     if u in users:
-            #         print("user found")
-
-            #     else:
-            #         print("not found")
-
-            # if s in setups:
-            #     print("setup found")
 
             return redirect(request.url)
 
-            # In order to avoid duplication check the user has this setup, he wants to add
-            # If the user doesn't have the setup
-            # insert this setup to favorite_setups table
-            # and display the message "Setup was successfully added to favorites!"
-            # if not user_id in users:
-                # db.execute("INSERT INTO favorite_setups (user_id) VALUES (?)", [user_id])
-                # db.commit()
-                # print("user inserted")
-
-
-                # if not setup_id in setups:
-                    # db.execute("INSERT INTO favorite_setups (setup_id) VALUES (?)", [setup_id])
-                    # db.commit()
-
-                    # flash ("Setup was successfully added to favorites!")
-                    # db.close()
-                    # return redirect(request.url)
-            # else:
-            # if has - display the message "You already have this setup in the favorites!"
-                # flash ("You already have this setup in the favorites!")
-
-            # return redirect(request.url)
-
         else:
-            # Method GET
+            # GET
+            # Show setups for current car and location
             location_id = request.form.get("location_id")
             car_id = request.form.get("car_id")
 
@@ -408,6 +347,7 @@ def about():
 
 @app.route("/apology")
 def apology():
+    '''Display error page'''
     return render_template('apology.html')
 
 
@@ -445,13 +385,12 @@ def reset():
         db = db_connection() # Connect database
         user_id = db.execute("SELECT id FROM users WHERE username=?", [username]).fetchone()["id"] # Get user id from database
 
-        # print(f'\n\n{user_id}\n\n')
-        # Updata password
+        # Update password
         db.execute("UPDATE users SET hash=? WHERE id=?", [hash, user_id])
 
         # Commit changes on database
         db.commit() 
-        db.close() # Close connection to database
+        db.close()
         flash("Password was reset.")
 
         return redirect('/')
