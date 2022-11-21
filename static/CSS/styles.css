@@ -162,6 +162,17 @@ div#loading {
     background-color: rgba(0, 0, 0, 0.223);
 }
 
+/* Footer */
+footer span {
+  /* color:  #dfb131; */
+  font-weight: bold;
+}
+
+footer a {
+  /* color:  #dfb131; */
+  text-decoration: none;
+}
+
 
 /* Account page setup card test view */
 .d-flex {
