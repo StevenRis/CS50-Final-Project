@@ -449,3 +449,11 @@ footer a {
     white-space: nowrap;
   }
   
+
+  .show {
+    display: none;
+  }
+
+  .show-active {
+    display: block;
+  }

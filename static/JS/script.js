@@ -5,32 +5,13 @@ window.addEventListener('load', (event) => {
     showSpinner();
 })
 
-//preloader
+//Display spinner while loading the page content
 function showSpinner(){
     document.querySelector("#loading").style.display = "none";
     document.querySelector("#content").style.display = "block";
     document.querySelector("footer").style.display = "block";
 }
 
-// Get all a tags with class .car-setup
-// It returns node list of a tags
-// const setup_links = document.querySelectorAll('form');
-// console.log(setup_links);
-
-// // loop through a tags
-// function changeTag() {
-//     for (let i = 0; i < setup_links.length; i++) {
-//         // Get a tag href value and slice it
-//         // 21 symbols from the beginnning and 4 symbols from the end
-//         const new_url = setup_links[i].action.slice(26).split(' ').join('_');
-//         // const new_url = setup_links[i].action.replace('', '1');
-//         console.log(new_url);
-//         // Make change on the page
-//         setup_links[i].action = new_url;
-//     }
-// }
-
-// changeTag()
 // Get the button
 let goTopButton = document.querySelector(".goTopButton");
 
@@ -55,5 +36,5 @@ function scrollFunction() {
 
 // Scroll to the top of the document
 function topFunction() {
-  document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+    document.documentElement.scrollTop = 0;
 }
