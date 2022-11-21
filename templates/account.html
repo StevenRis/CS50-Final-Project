@@ -13,50 +13,6 @@
             <div class="text-center">
                 <h2>Favorite setups</h2>
             </div>
-            <!-- <table class="table table-sm table-boardered table-striped shadow p-4 mb-4 bg-white ">
-                <tr class="table-dark">
-                    <th class="text-center" colspan="100%">Favorite setups</th>
-                </tr>
-            {% if session["user_id"] %}
-                {% if setups %}
-                    {% for setup in setups %}
-                    <tr class="table-light">
-                        <td class="text-start account-setups-td">{{ setup["brand"] }} {{ setup["model"] }}</td>
-                        <td class="text-start account-setups-td">{{ setup["location_name"] }}</td>
-                        <td class="text-start account-setups-td">Tyres: {{ setup["tyres"] }}</td>
-                        {% if setup["conditions"] == "Dry" %}
-                        <td class="table-warning text-start account-setups-td">Condition: {{ setup["conditions"] }}</td>
-                        <td class="text-start account-setups-td">Surface: {{ setup["surface"] }}</td>
-                        {% endif %}
-                        {% if setup["conditions"] == "Wet" %}
-                        <td class="table-primary text-start account-setups-td">Condition: {{ setup["conditions"] }}</td>
-                        <td class="text-start account-setups-td">Surface: {{ setup["surface"] }}</td>
-                        {% endif %}
-                        <td>
-                            <form action="/account/favorite_setup/{{ setup['model'] }}/{{ setup['location_name'] }}" method="post">
-                                <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
-                                <input name="model" value="{{ setup['model'] }}" type="text" hidden>
-                                <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
-                                <button class="btn btn-success" type="submit"><img src="{{ url_for('static', filename='/icons/view.png') }}" alt="delete-setup" width="20px"></button>
-                            </form>
-                        </td>
-                        <td>
-                            <form action="/account" method="post">
-                                <input name="user_id" value="{{ user_id }}" type="text" hidden>
-                                <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
-                                <button class="btn btn-danger" type="submit"><img src="{{ url_for('static', filename='/icons/delete.png') }}" alt="delete-setup" width="20px"></button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr class="table-light">
-                        <td class="text-center">No favorite setups yet!</td>
-                    </tr>
-                {% endif %}
-            {% endif %}
-
-            </table> -->
             <div class="container page-wrapper">
                 <div class="page-inner">
                     <div class="row">
@@ -64,13 +20,13 @@
                     {% if setups %}
                     {% for setup in setups %}
                     <!-- CARD -->
-                        <div class="el-wrapper shadow">
+                        <div class="el-wrapper bg-dark shadow">
                             <div class="box-up">
                                 <img class="img" src="/static/images/cars/2000cc/{{ setup['car_image'] }}" alt="{{ setup['car_image'] }}" style="width: 100%"> 
                                 <div class="img-info">
                                     <div class="info-inner">
                                         <span class="p-company">{{ setup["brand"] }} {{ setup["model"] }}</span>
-                                        <span class="p-name">{{ setup["location_name"] }}</span>
+                                        <span class="p-name"><img src="/static/images/locations/{{ setup['location_image'] }}" alt="{{ setup['location_image'] }}" style="width: 10%"> {{ setup["location_name"] }}</span>
                                     </div>
                                     <div class="a-size d-grid">
                                         <span class="size">Condition: {{ setup["conditions"] }}</span>

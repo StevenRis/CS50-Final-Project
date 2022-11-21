@@ -301,7 +301,7 @@ div#loading {
     /* ease-out */
     width: 660px;
     height: 100%;
-    background-color: #3f96cd;
+    background-color: #dc3545;
     position: absolute;
     left: -659px;
   }
@@ -336,7 +336,7 @@ div#loading {
   .info-inner .p-name {
     font-family: 'PT Sans', sans-serif;
     font-size: 18px;
-    color: #252525;
+    color: #8c8c8c;
   }
   
   .info-inner .p-company {
@@ -366,7 +366,7 @@ div#loading {
   }
   
   .a-size .size {
-    color: #252525;
+    color: #828282;
   }
   
   .cart {
