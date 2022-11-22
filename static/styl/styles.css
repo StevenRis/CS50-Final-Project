@@ -55,10 +55,10 @@ div#loading {
     }
 }
 
-.hero-bg img {
+/* .hero-bg img {
     width: 100%;
     height: auto;
-}
+} */
 
 .hero-title {
     position: absolute;
@@ -449,11 +449,3 @@ footer a {
     white-space: nowrap;
   }
   
-
-  .show {
-    display: none;
-  }
-
-  .show-active {
-    display: block;
-  }

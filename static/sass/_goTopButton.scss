@@ -1,0 +1,43 @@
+.goTopButton {
+    display: none;
+    position: fixed;
+    bottom: 60px;
+    right: 6px;
+    z-index: 99;
+    cursor: pointer;
+    padding: 15px;
+    background-color: #dc3545;
+    border-radius: 10px;
+
+    .bar1, .bar2 {
+        width: 20px;
+        height: 2px;
+        margin: 3px 0 0 -4px;
+        transition: 0.7s;
+        background-color: #000000;
+        border-radius: 1rem
+    }
+
+    .bar1 {
+        transform: rotate(128deg) translate(3px, 3px);
+    }
+
+    .bar2{
+        transform: rotate(45deg) translate(2px, -9px);
+    }
+
+    &:hover, &:focus {
+        background-color: rgba(0, 0, 0, 0.223);
+    }
+}
+
+@media(min-width: 768px) {
+    .goTopButton {
+    right: 25px;
+    }
+}
+
+
+
+
+

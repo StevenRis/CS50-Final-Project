@@ -1,0 +1,36 @@
+.hero {
+    background-image: url(/static/images/background/main-mobile.jpg);
+    background-color: #000000;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: 100%;
+    height: 94vh;
+
+    .hero-title {
+        position: absolute;
+        top: 5%;
+        left: 52%;
+        transform: translate(-50%);
+        z-index: 2;
+        margin-top: 10px;
+    }
+}
+
+@media (min-width: 770px) {
+    .hero {
+        background-image: url(/static/images/background/main-bg.jpg);
+    }
+}
+
+@media (min-width: 450px) {
+    .hero {
+        .hero-title {
+            top: 10%;
+            left: 70%;
+            margin-top: 50px;
+            width: 220px;
+        }
+    }
+}

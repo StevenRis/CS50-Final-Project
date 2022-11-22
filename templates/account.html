@@ -13,61 +13,55 @@
             <div class="text-center">
                 <h2>Favorite setups</h2>
             </div>
-            <div class="container page-wrapper">
-                <div class="page-inner">
-                    <div class="row">
-                    {% if session["user_id"] %}
-                    {% if setups %}
-                    {% for setup in setups %}
-                    <!-- CARD -->
-                        <div class="el-wrapper bg-dark shadow">
-                            <div class="box-up">
-                                <img class="img" src="/static/images/cars/2000cc/{{ setup['car_image'] }}" alt="{{ setup['car_image'] }}" style="width: 100%"> 
-                                <div class="img-info">
-                                    <div class="info-inner">
-                                        <span class="p-company">{{ setup["brand"] }} {{ setup["model"] }}</span>
-                                        <span class="p-name"><img src="/static/images/locations/{{ setup['location_image'] }}" alt="{{ setup['location_image'] }}" style="width: 10%"> {{ setup["location_name"] }}</span>
-                                    </div>
-                                    <div class="a-size d-grid">
-                                        <span class="size">Condition: {{ setup["conditions"] }}</span>
-                                        <span class="size">Surface: {{ setup["surface"] }}</span>
-                                        <span class="size">Tyres: {{ setup["tyres"] }}</span>
-                                    </div>
-                                </div>
+            <div class="row">
+            {% if session["user_id"] %}
+            {% if setups %}
+            {% for setup in setups %}
+                <div class="wrapper bg-dark shadow">
+                    <div class="box-up">
+                        <img class="img" src="/static/images/cars/2000cc/{{ setup['car_image'] }}" alt="{{ setup['car_image'] }}" style="width: 100%"> 
+                        <div class="img-info">
+                            <div class="info-vehicle">
+                                <span class="vehicle-title">{{ setup["brand"] }} {{ setup["model"] }}</span>
+                                <span class="location-title p-name"><img src="/static/images/locations/{{ setup['location_image'] }}" alt="{{ setup['location_image'] }}" style="width: 10%"> {{ setup["location_name"] }}</span>
                             </div>
-
-                            <div class="box-down">
-                                <div class="h-bg">
-                                    <div class="h-bg-inner"></div>
-                                </div>
-                            <a class="cart" href="#">
-                                <span class="price">Setup</span>
-                                <span class="add-to-cart d-flex">
-                                    <form action="/account/favorite_setup/{{ setup['model'] }}/{{ setup['location_name'] }}" method="post">
-                                        <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
-                                        <input name="model" value="{{ setup['model'] }}" type="text" hidden>
-                                        <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
-                                        <span class="txt pe-2"><button class="btn btn-danger" type="submit"><img src="{{ url_for('static', filename='/icons/view.png') }}" alt="delete-setup" width="20px"></button></span>
-                                    </form>
-                                    <form action="/account" method="post">
-                                    <input name="user_id" value="{{ user_id }}" type="text" hidden>
-                                    <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
-                                    <span class="txt"><button class="btn btn-danger" type="submit"><img src="{{ url_for('static', filename='/icons/delete.png') }}" alt="delete-setup" width="20px"></button></span>
-                                    </form>
-                                </span>
-                            </a>
+                            <div class="info-setup d-grid">
+                                <span class="setup-info_condition">Condition: {{ setup["conditions"] }}</span>
+                                <span class="setup-info_surface">Surface: {{ setup["surface"] }}</span>
+                                <span class="setup-info_tyres">Tyres: {{ setup["tyres"] }}</span>
+                            </div>
                         </div>
                     </div>
-                    <!--  -->
-                {% endfor %}
-                {% else %}
-                        <tr class="table-light">
-                            <td class="text-center">No favorite setups yet!</td>
-                        </tr>
-                {% endif %}
-            {% endif %}
-                    </div>
+
+                    <div class="box-down">
+                        <div class="h-bg">
+                            <div class="h-bg-inner"></div>
+                        </div>
+                    <a class="show-setup" href="#">
+                        <span class="setup-txt">Setup</span>
+                        <span class="show-setup_icons d-flex">
+                            <form action="/account/favorite_setup/{{ setup['model'] }}/{{ setup['location_name'] }}" method="post">
+                                <input name="location_name" value="{{ setup['location_name'] }}" type="text" hidden>
+                                <input name="model" value="{{ setup['model'] }}" type="text" hidden>
+                                <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
+                                <span class="txt pe-2"><button class="btn btn-danger" type="submit"><img src="{{ url_for('static', filename='/icons/view.png') }}" alt="delete-setup" width="20px"></button></span>
+                            </form>
+                            <form action="/account" method="post">
+                            <input name="user_id" value="{{ user_id }}" type="text" hidden>
+                            <input name="setup_id" value="{{ setup['setup_id'] }}" type="text" hidden>
+                            <span class="txt"><button class="btn btn-danger" type="submit"><img src="{{ url_for('static', filename='/icons/delete.png') }}" alt="delete-setup" width="20px"></button></span>
+                            </form>
+                        </span>
+                    </a>
                 </div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <tr class="table-light">
+                <td class="text-center">No favorite setups yet!</td>
+            </tr>
+            {% endif %}
+            {% endif %}
             </div>
         </div>
     </div>

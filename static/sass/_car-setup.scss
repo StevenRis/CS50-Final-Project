@@ -1,0 +1,27 @@
+.setup-bg {
+    background-color: #EDEDED;
+}
+
+.table-light > th {
+    width: 35%;
+}
+
+// .favorite-icon {
+//     font-size: 20px;
+// }
+
+@media (min-width: 375px) {
+    .table {
+        width: 100%;
+    }
+
+    .table-light > th {
+        width: 50%;
+    }
+}
+
+@media (max-width: 450px) {
+    .flex-container {
+        flex-wrap: wrap;
+    }
+}

@@ -130,7 +130,7 @@ def show_car_locations(model):
         # Get available locations for current car
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
-        return render_template ("setups.html", car_locations=car_locations, car=car)
+        return render_template ("car-setups.html", car_locations=car_locations, car=car)
 
     else:
         # When user reach route via GET (as by clicking a link or via redirect)
@@ -156,7 +156,7 @@ def show_car_locations(model):
         # by using the car_id
         car_locations = db.execute("SELECT DISTINCT locations.id AS location_id, location_name, location_image FROM locations INNER JOIN setups ON locations.id=setups.locations_id INNER JOIN cars ON cars.id=setups.cars_id WHERE cars_id IN (SELECT id FROM cars WHERE id=?)", [car_id])
 
-        return render_template("setups.html", car=car, model=model, car_locations=car_locations)
+        return render_template("car-setups.html", car=car, model=model, car_locations=car_locations)
 
 
 @app.route("/cars/<model>/<location>", methods=["GET", "POST"])
