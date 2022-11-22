@@ -1,14 +1,10 @@
 .setup-bg {
-    background-color: #EDEDED;
+    background-color: $darky-white;
 }
 
 .table-light > th {
     width: 35%;
 }
-
-// .favorite-icon {
-//     font-size: 20px;
-// }
 
 @media (min-width: 375px) {
     .table {

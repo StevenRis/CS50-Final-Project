@@ -1,21 +1,20 @@
 .goTopButton {
-    display: none;
     position: fixed;
     bottom: 60px;
     right: 6px;
-    z-index: 99;
-    cursor: pointer;
+    display: none;
     padding: 15px;
-    background-color: #dc3545;
+    background-color: $red;
     border-radius: 10px;
+    cursor: pointer;
+    z-index: 99;
 
     .bar1, .bar2 {
         width: 20px;
         height: 2px;
         margin: 3px 0 0 -4px;
+        background-color: $black;
         transition: 0.7s;
-        background-color: #000000;
-        border-radius: 1rem
     }
 
     .bar1 {
@@ -27,7 +26,7 @@
     }
 
     &:hover, &:focus {
-        background-color: rgba(0, 0, 0, 0.223);
+        background-color: $transparent-black;
     }
 }
 

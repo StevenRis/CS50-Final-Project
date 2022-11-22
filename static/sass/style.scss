@@ -5,7 +5,7 @@
 @import 'apology';
 @import 'goTopButton';
 @import 'account';
-
+@import 'colors';
 
 html, body {
     height: 100%;
@@ -26,7 +26,7 @@ footer, #content {
 }
 
 .footer {
-    background-color: #000000;
+    background-color: $black;
 
     span {
         font-weight: bold;
@@ -40,9 +40,3 @@ footer, #content {
 #content {
     margin-top: 60px;
 }
-
-// .user {
-//     display: flex;
-//     align-items: center;
-// }
-
