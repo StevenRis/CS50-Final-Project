@@ -102,7 +102,8 @@ def show_fav_setups(model, location):
 
     else:
         # Get
-        return redirect("/account")
+        flash('There is no such setup!')
+        return redirect("/apology")
 
 
 

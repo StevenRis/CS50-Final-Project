@@ -8,21 +8,25 @@
 @import 'apology';
 
 html, body {
-    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+nav {
+    z-index: 99;
 }
 
 .wrapper-container {
+    height: 100vh;
+}
+
+.wrapper-container, .main, .content {
     display: flex;
     flex-direction: column;
-    min-height: 100%;
 }
 
-.main {
+.main, .content {
     flex: 1 1 auto;
-}
-
-footer, #content {
-    display: none;
 }
 
 .footer {
@@ -37,6 +41,3 @@ footer, #content {
     }
 }
 
-#content {
-    margin-top: 60px;
-}
