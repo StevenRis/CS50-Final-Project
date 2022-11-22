@@ -20,7 +20,7 @@
                     <form action="/cars/{{ car['model'] }}/{{ car_location['location_name'] }}" method="post">
                         <input name="location_id" value="{{ car_location['location_id'] }}" type="text" hidden>
                         <input name="car_id" value="{{ car['id'] }}" type="text" hidden>
-                        <button class="btn btn-outline-secondary" type="submit">Select</button>
+                        <button class="btn btn-danger" type="submit">Select</button>
                     </form>
                 </div>
             </div>
