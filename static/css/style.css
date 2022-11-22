@@ -249,6 +249,18 @@ html, body {
   padding: 0;
 }
 
+body::-webkit-scrollbar {
+  width: 7px;
+}
+
+body::-webkit-scrollbar-track {
+  background-color: #000000;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #dc3545;
+}
+
 nav {
   z-index: 99;
 }
