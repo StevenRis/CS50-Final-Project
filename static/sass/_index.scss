@@ -8,11 +8,26 @@
     background-size: cover;
 
         .hero-title {
-        position: absolute;
-        top: 20%;
-        left: 52%;
-        transform: translate(-50%);
-        z-index: 2;
+            display: block;
+            padding: 26px;
+
+            div {
+            text-align: center;
+            }
+
+            h1 {
+                display: inline-block;
+                margin-right: 5px;
+                text-shadow: -1px 0 $black, 0 1px $black, 1px 0 $black, 0 -1px $black;
+            }
+
+            :nth-child(3) {
+                color: $red;
+            }
+
+            p {
+                padding: 10px 0;
+            }
     }
 }
 
@@ -25,9 +40,20 @@
 @media (min-width: 450px) {
     .hero {
         .hero-title {
+            position: absolute;
             top: 10%;
             left: 70%;
+            width: 36%;
+            transform: translate(-50%);
             margin-top: 50px;
+
+            div {
+                text-align: left;
+            }
+
+            h1 {
+                display: block;
+            }
         }
     }
 }
