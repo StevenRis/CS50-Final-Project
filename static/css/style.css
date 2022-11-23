@@ -27,8 +27,12 @@
     margin-top: 50px;
   }
 }
-#loading {
-  margin-top: 200px;
+.spinner {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  justify-content: center;
+  align-items: center;
   z-index: 1000;
   cursor: wait;
 }
@@ -269,8 +273,13 @@ nav {
   height: 100vh;
 }
 
-.wrapper-container, .main, .content {
+.wrapper-container, .main {
   display: flex;
+  flex-direction: column;
+}
+
+.content {
+  display: none;
   flex-direction: column;
 }
 

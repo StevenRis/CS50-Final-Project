@@ -7,9 +7,9 @@ window.addEventListener('load', (event) => {
 
 //Display spinner while loading the page content
 function showSpinner(){
-    document.querySelector("#loading").style.display = "none";
-    document.querySelector("#content").style.display = "block";
-    document.querySelector("footer").style.display = "block";
+    document.querySelector(".spinner").style.display = "none";
+    document.querySelector(".content").style.display = "flex";
+    // document.querySelector("footer").style.display = "block";
 }
 
 // Get the button

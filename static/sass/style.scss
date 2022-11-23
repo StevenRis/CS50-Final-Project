@@ -32,8 +32,13 @@ nav {
     height: 100vh;
 }
 
-.wrapper-container, .main, .content {
+.wrapper-container, .main {
     display: flex;
+    flex-direction: column;
+}
+
+.content {
+    display: none;
     flex-direction: column;
 }
 
