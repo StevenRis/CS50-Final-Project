@@ -3,6 +3,7 @@ from tempfile import mkdtemp
 
 from flask import (Flask, flash, redirect, render_template, request, session, url_for)
 from werkzeug.security import check_password_hash, generate_password_hash
+import re
 
 from flask_session import Session
 from helpers import login_required
@@ -247,6 +248,22 @@ def register():
         confirmationPassword = request.form.get("confirmation")
         hash = generate_password_hash(password)
 
+        # Password validation
+        if len(password) < 6:
+            flash("Make sure your password is at lest 6 letters")
+            return redirect(request.url)
+        elif re.search('[0-9]', password) is None:
+            flash("Make sure your password has a number in it")
+            return redirect(request.url)
+        elif re.search('[A-Z]', password) is None:
+            flash("Make sure your password has a capital letter in it")
+            return redirect(request.url)
+        elif re.search('[|^&+\-%*/=!@>]', password) is None:
+            flash("Make sure your password has a specisal character in it")
+            return redirect(request.url)
+        else:
+            print("Your password seems fine")
+
         # Check the username and password were submited
         if not username:
             flash("Please enter username")
@@ -363,6 +380,22 @@ def reset():
         new_password = request.form.get("new_password")
         confirmationPassword = request.form.get("confirmation")
         hash = generate_password_hash(new_password)
+
+        # Password validation
+        if len(new_password) < 6:
+            flash("Make sure your password is at lest 6 letters")
+            return redirect(request.url)
+        elif re.search('[0-9]', new_password) is None:
+            flash("Make sure your password has a number in it")
+            return redirect(request.url)
+        elif re.search('[A-Z]', new_password) is None:
+            flash("Make sure your password has a capital letter in it")
+            return redirect(request.url)
+        elif re.search('[|^&+\-%*/=!@>]', new_password) is None:
+            flash("Make sure your password has a specisal character in it")
+            return redirect(request.url)
+        else:
+            print("Your password seems fine")
 
         # Check the username and password were submited
         if not username:

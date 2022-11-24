@@ -9,13 +9,13 @@
         <div class="user-data pt-5 text-center">
             <h1>Hello, {{ username }}!</h1>
         </div>
+        {% if session["user_id"] %}
+        {% if setups %}
         <div class="container-fluid mt-3">
             <div class="text-center">
                 <h2>Favorite setups</h2>
             </div>
             <div class="row">
-            {% if session["user_id"] %}
-            {% if setups %}
             {% for setup in setups %}
                 <div class="wrapper bg-dark shadow">
                     <div class="box-up">
@@ -57,9 +57,9 @@
             </div>
             {% endfor %}
             {% else %}
-            <tr class="table-light">
-                <td class="text-center">No favorite setups yet!</td>
-            </tr>
+            <div class="mt-5 text-center">
+                <span class="text-center">No favorite setups yet!</span>
+            </div>
             {% endif %}
             {% endif %}
             </div>
