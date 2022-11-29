@@ -39,7 +39,7 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 
-// 
+
 // Show modal window sign in/register
 // when unregistered user tries
 // to add setup to favorites
