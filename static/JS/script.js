@@ -39,26 +39,27 @@ function topFunction() {
     document.documentElement.scrollTop = 0;
 }
 
-
 // Show modal window sign in/register
 // when unregistered user tries
 // to add setup to favorites
 const addToFavoriteButton = document.querySelector(".favoriteButton"),
     modal = document.querySelector(".modal");
 
-addToFavoriteButton.addEventListener('click', (event) => {
+function showModal() {
+    modal.classList.add("active");
+};
+
+// Check button and modal exist
+// by adding ? sign to avoid error
+addToFavoriteButton?.addEventListener('click', (event) => {
     event.preventDefault();
     showModal();
     document.body.style.overflow = 'hidden';
-})
+});
 
-function showModal() {
-    modal.classList.add("active");
-}
-
-modal.addEventListener('click', (event) => {
+modal?.addEventListener('click', (event) => {
     if (event.target === modal || event.target.classList.contains("close-button")) {
         modal.classList.remove("active");
         document.body.style.overflow = '';
-    }
-})
+    };
+});
