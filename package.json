@@ -1,0 +1,26 @@
+{
+  "name": "race_place",
+  "version": "1.0.0",
+  "description": "cs50 final project",
+  "main": "app.py",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StevenRis/CS50-Final-Project.git"
+  },
+  "keywords": [
+    "dirt",
+    "rally",
+    "2.0",
+    "car",
+    "setups"
+  ],
+  "author": "StevenRi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/StevenRis/CS50-Final-Project/issues"
+  },
+  "homepage": "https://github.com/StevenRis/CS50-Final-Project#readme"
+}
