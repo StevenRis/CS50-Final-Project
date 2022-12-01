@@ -1,5 +1,4 @@
 # Race_Place - cars' setups for Dirt Rally 2.0
-# Video Demo:  <https://youtu.be/VSgLKzvbg5w>
 # Description:
 &nbsp;
 My project is called **Race_Place** and is dedicated to racing game **Dirt Rally 2.0**.
